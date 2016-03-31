@@ -1,5 +1,7 @@
 package game.engine.main;
 
+import game.classes.GameRender;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -45,7 +47,7 @@ public class GameClass extends AbstractGameClass {
 		this.setFont(new BitmapFont());
 		
 		OrthographicCamera camera = new OrthographicCamera();
-        camera.setToOrtho(false, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+        camera.setToOrtho(false, 64, 64);
         this.setCamera(camera);
         
 		try{
@@ -84,7 +86,7 @@ public class GameClass extends AbstractGameClass {
 				String name = fileHandle.nameWithoutExtension();
 				Texture texture = new Texture(fileHandle);
 				if(texture.getWidth() <= Config.tileSize && texture.getHeight() <= Config.tileSize 
-							|| name.contains("bg"))
+							|| name.contains("bg") || name.contains("player") || name.contains("empty"))
 						getImageHandler().addImage(name, new TextureRegion(texture));
 					else {
 						int splitterX = texture.getWidth()/Config.tileSize;
@@ -179,6 +181,8 @@ public class GameClass extends AbstractGameClass {
 	public void initStartScreen() {
 //		this.setScreen(TickClassHandler.handler.getTick(this, 0));
 //	    Gdx.input.setInputProcessor(TickClassHandler.handler.getTick(this, 0));
+		
+		this.setScreen(new GameRender(this));
 	}
 
 }

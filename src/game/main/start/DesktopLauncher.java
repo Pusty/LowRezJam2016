@@ -10,8 +10,8 @@ public class DesktopLauncher {
 	public static void main (String[] arg) {
 		LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
 		config.title = "Title";
-		config.width = 213*4;
-		config.height = 120*4;
+		config.width = 64*8;
+		config.height = 64*8;
 		config.resizable = true;
 		config.foregroundFPS = 60;
 		config.backgroundFPS = 30;
