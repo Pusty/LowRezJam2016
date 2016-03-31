@@ -1,11 +1,11 @@
 package game.engine.main;
 
 import game.classes.GameRender;
+import game.engine.world.World;
+import game.engine.world.WorldLoader;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
-import java.util.Map.Entry;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Files.FileType;
@@ -47,7 +47,7 @@ public class GameClass extends AbstractGameClass {
 		this.setFont(new BitmapFont());
 		
 		OrthographicCamera camera = new OrthographicCamera();
-        camera.setToOrtho(false, 64, 64);
+        camera.setToOrtho(false, 1000, 1000);
         this.setCamera(camera);
         
 		try{
@@ -165,10 +165,31 @@ public class GameClass extends AbstractGameClass {
 	}
 
 	
+	public static String replaceAll(String in, String ths, String that) {
+	    StringBuilder sb = new StringBuilder(in);
+	    int idx = sb.indexOf(ths); 
+	    
+	    while (idx > -1) {
+	        sb.replace(idx, idx + ths.length(), that);
+	        idx = sb.indexOf(ths);
+
+	    }
+	    
+	    return sb.toString();
+
+	}
 
 	@Override
 	public void Init() {
-//		this.setWorld(world);
+		setWorld(WorldLoader.loadWorld(this,Gdx.files.internal("resources/map.csv")));
+	}
+	
+	World currentWorld = null;
+	public void setWorld(World w) {
+		currentWorld = w;
+	}
+	public World getWorld() {
+		return currentWorld;
 	}
 
 	@Override
