@@ -78,7 +78,7 @@ public class GameClass extends AbstractGameClass {
 			}
 			
 			
-			String fileNames[] = {"resources/tiles.png","resources/player.png","resources/bg.png"};
+			String fileNames[] = {"resources/tile.png","resources/player.png","resources/empty.png"};
 			for(String fileName:fileNames) {			
 				fileHandle = Gdx.files.internal(fileName);
 				String name = fileHandle.nameWithoutExtension();
