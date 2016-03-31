@@ -2,11 +2,8 @@ package game.main.start;
 
 import game.engine.main.GameClass;
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Files.FileType;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
-import com.badlogic.gdx.utils.JsonValue;
 
 
 public class DesktopLauncher {
