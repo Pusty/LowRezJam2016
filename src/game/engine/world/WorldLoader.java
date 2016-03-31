@@ -9,15 +9,23 @@ public class WorldLoader {
 		try {
 		String text = handle.readString();
 		String lines[] = text.split("\n");
-		World world = new World(g,lines[0].length(),lines.length);
-		for(int y=0;y<lines.length;y++) {
-			int count = 0;
-			for(char c:lines[y].toCharArray())
-				if(c==',')
-					count++;
-			for(int x=0;x<count;x++)
-				world.setBlockID(x,y, Integer.parseInt(GameClass.splitNonRegex(lines[y]
-								, ",")[x].trim()));
+		
+		int count = 0;
+		for(char c:lines[0].toCharArray())
+			if(c==',')
+				count++;
+		
+		int sizeX = count;
+		int sizeY = lines.length;
+		
+		
+		World world = new World(g,sizeX,sizeY);
+		for(int y=0;y<sizeY;y++) {
+			String[] numbers = GameClass.splitNonRegex(lines[y].trim() , ",");
+			for(int x=0;x<sizeX;x++) {
+				int number = Integer.parseInt(numbers[x].trim());
+				world.setBlockID(x,(sizeY-1)-y, number);
+			}
 		}
 		return world;
 		}catch(Exception e){

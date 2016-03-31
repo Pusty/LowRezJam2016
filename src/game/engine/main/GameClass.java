@@ -47,7 +47,7 @@ public class GameClass extends AbstractGameClass {
 		this.setFont(new BitmapFont());
 		
 		OrthographicCamera camera = new OrthographicCamera();
-        camera.setToOrtho(false, 1000, 1000);
+        camera.setToOrtho(false, 64, 64);
         this.setCamera(camera);
         
 		try{

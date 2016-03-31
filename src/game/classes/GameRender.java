@@ -66,6 +66,8 @@ public class GameRender extends Tick{
 
 	private void renderBlock(AbstractGameClass e,SpriteBatch b,int x,int y,int id) {
 		if(id<0) return;
+//		y = y - 57;
+//		x = x - 1;
 		b.draw(e.getImageHandler().getImage("tile_"+id), x*Config.tileSize, y*Config.tileSize, Config.tileSize,Config.tileSize);
 	}
 }

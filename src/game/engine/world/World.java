@@ -18,11 +18,11 @@ public class World {
 		mainclass=m;
 		sizex = sx;
 		sizey = sy;
-		chunkarray = new Chunk[(sx/10) * (sy/10)];
+		chunkarray = new Chunk[(sx/16) * (sy/16)];
 		int c=0;
-		for(int cx=0;cx<sx/10;cx++)
-			for(int cz=0;cz<sy/10;cz++){
-			chunkarray[c]=new Chunk(cx,cz,10,10);c++;}
+		for(int cx=0;cx<sx/16;cx++)
+			for(int cz=0;cz<sy/16;cz++){
+			chunkarray[c]=new Chunk(cx,cz,16,16);c++;}
 	}
 
 
@@ -35,18 +35,18 @@ public class World {
 //	}
 	
 	public int getBlockID(int x, int y) {
-		int wx = x/10;
-		int wy = y/10;
-		if(wx*sizey/10+wy>=sizex/10*sizey/10)return 0;
+		int wx = x/16;
+		int wy = y/16;
+		if(wx*sizey/16+wy>=sizex/16*sizey/16)return 0;
 		if(x<0 || y<0)return 0;
-		return chunkarray[((wx*(sizey/10))+wy)].getBlockID(x-(10*wx),  y-(10*wy));
+		return chunkarray[((wx*(sizey/16))+wy)].getBlockID(x-(16*wx),  y-(16*wy));
 	}
 
 	public void setBlockID(int x, int y,int id) {
-		int wx = x/10;
-		int wy = y/10;
-		if(wx*sizey/10+wy>=sizex/10*sizey/10)return;
-		chunkarray[((wx*(sizey/10))+wy)].setBlockID(x-(10*wx),  y-(10*wy),id);
+		int wx = x/16;
+		int wy = y/16;
+		if(wx*sizey/16+wy>=sizex/16*sizey/16)return;
+		chunkarray[((wx*(sizey/16))+wy)].setBlockID(x-(16*wx),  y-(16*wy),id);
 	}
 	
 	public int getSizeX() {
