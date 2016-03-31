@@ -35,9 +35,9 @@ public class GameClass extends AbstractGameClass {
 	
 	@Override
 	public void preInit() {
-		FileChecker.createStreams();
+//		FileChecker.createStreams();
 		
-		TickClassHandler.initTickHandler(this);
+//		TickClassHandler.initTickHandler(this);
 		
 		this.setBatch(new SpriteBatch());
 		this.setFont(new BitmapFont());
@@ -48,62 +48,33 @@ public class GameClass extends AbstractGameClass {
         
 		try{
 			
-			for(Entry<String,FileHandle> entry:FileChecker.checkFolderToHashMap("", "png").entrySet()) {
-				String name = FileChecker.splitNonRegex(entry.getKey(),".")[0];
-				FileHandle file = entry.getValue();
-				if(name.equalsIgnoreCase("letters")) {
-					String[] letter = { "A", "B", "C", "D", "E", "F", "G", "H", "I",
-							"J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U",
-							"V", "W", "X", "Y", "Z", ":", "!", "?", ".", "[", "]", "0",
-							"1", "2", "3", "4", "5", "6", "7", "8", "9", "(", ")", "+",
-							"-", "/", " ", "_","," };
-					
-					
+			FileHandle fileHandle = Gdx.files.internal("chars.png");
+			{
+				String[] letter = { "A", "B", "C", "D", "E", "F", "G", "H", "I",
+						"J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U",
+						"V", "W", "X", "Y", "Z", ":", "!", "?", ".", "[", "]", "0",
+						"1", "2", "3", "4", "5", "6", "7", "8", "9", "(", ")", "+",
+						"-", "/", " ", "_","," };
+				
+				
 
-					Texture tex = new Texture(file);
-					TextureRegion[][]  tmp = TextureRegion.split(tex, tex.getWidth()/8, tex.getHeight()/8);
-			        int index = 0;
-			        for (int i = 0; i < 8; i++) {
-			            for (int j = 0; j < 8; j++) {
-			            	getImageHandler().addImage("char_" + letter[index], tmp[i][j]);
-			                index++;
-			                if(index >= letter.length)
-			                	break;
-			            }
+				Texture tex = new Texture(fileHandle);
+				TextureRegion[][]  tmp = TextureRegion.split(tex, tex.getWidth()/8, tex.getHeight()/8);
+		        int index = 0;
+		        for (int i = 0; i < 8; i++) {
+		            for (int j = 0; j < 8; j++) {
+		            	getImageHandler().addImage("char_" + letter[index], tmp[i][j]);
+		            	getImageHandler().addImage("small_" + letter[index], tmp[i][j]);
+		                index++;
 		                if(index >= letter.length)
 		                	break;
-			        }
-			        
-			     
-				}else if(name.equalsIgnoreCase("chars")) {
-					
-					char[] smallletters = { ' ', 'A','B','C','D','E','F','G','H','I',
-											'J', 'K','L','M','N','O','P','Q','R','S',
-											'T', 'U','V','W','X','Y','Z','a','b','c',
-											'd', 'e','f','g','h','i','j','k','l','m',
-											'n', 'o','p','q','r','s','t','u','v','w',
-											'x', 'y','z','0','1','2','3','4','5','6',
-											'7', '8','9','!','"','%','&','/','(',')',
-											'=', '?','[',']','{','}','\\','|','<','>',
-											'*', '+','~',"'".toCharArray()[0],'#','-','_','.',':',',',
-											';'};
-					
-					
-					
-					Texture tex = new Texture(file);
-					TextureRegion[][]  tmp = TextureRegion.split(tex, tex.getWidth()/10, tex.getHeight()/10);
-			        int index = 0;
-			        for (int i = 0; i < tmp.length; i++) {
-			            for (int j = 0; j < tmp[i].length; j++) {
-			            	getImageHandler().addImage("small_" + smallletters[index], tmp[i][j]);
-			                index++;
-			                if(index >= smallletters.length)
-			                	break;
-			            }
-		                if(index >= smallletters.length)
-		                	break;
-			        }
-				}else {
+		            }
+	                if(index >= letter.length)
+	                	break;
+		        }
+		        
+			}
+	
 					Texture texture = new Texture(file);
 					if(texture.getWidth() <= Options.tileSize && texture.getHeight() <= Options.tileSize 
 							|| name.contains("bg"))
@@ -122,7 +93,7 @@ public class GameClass extends AbstractGameClass {
 					}
 						
 				}
-			}
+			
 		
 			
 
