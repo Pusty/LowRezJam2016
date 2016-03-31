@@ -16,6 +16,8 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.utils.JsonValue;
 
 import me.pusty.util.AbstractGameClass;
+import me.pusty.util.RawAnimation;
+import me.pusty.util.json.JsonHandler;
 
 public class GameClass extends AbstractGameClass {
 
@@ -48,7 +50,7 @@ public class GameClass extends AbstractGameClass {
         
 		try{
 			
-			FileHandle fileHandle = Gdx.files.internal("chars.png");
+			FileHandle fileHandle = Gdx.files.internal("resources/chars.png");
 			{
 				String[] letter = { "A", "B", "C", "D", "E", "F", "G", "H", "I",
 						"J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U",
@@ -74,14 +76,19 @@ public class GameClass extends AbstractGameClass {
 		        }
 		        
 			}
-	
-					Texture texture = new Texture(file);
-					if(texture.getWidth() <= Options.tileSize && texture.getHeight() <= Options.tileSize 
+			
+			
+			String fileNames[] = {"resources/tiles.png","resources/player.png","resources/bg.png"};
+			for(String fileName:fileNames) {			
+				fileHandle = Gdx.files.internal(fileName);
+				String name = fileHandle.nameWithoutExtension();
+				Texture texture = new Texture(fileHandle);
+				if(texture.getWidth() <= Config.tileSize && texture.getHeight() <= Config.tileSize 
 							|| name.contains("bg"))
 						getImageHandler().addImage(name, new TextureRegion(texture));
 					else {
-						int splitterX = texture.getWidth()/Options.tileSize;
-						int splitterY = texture.getHeight()/Options.tileSize;
+						int splitterX = texture.getWidth()/Config.tileSize;
+						int splitterY = texture.getHeight()/Config.tileSize;
 						TextureRegion[][]  tmp = TextureRegion.split(texture, texture.getWidth()/splitterX, texture.getHeight()/splitterY);
 				        int index = 0;
 				        for (int i = 0; i < tmp.length; i++) {
@@ -91,8 +98,10 @@ public class GameClass extends AbstractGameClass {
 				            }
 				        }
 					}
+			}
+			
 						
-				}
+				
 			
 		
 			
@@ -116,24 +125,13 @@ public class GameClass extends AbstractGameClass {
 
 		}catch(Exception e){e.printStackTrace();}
 		
-		/*
-		this.setRender(new Render());
-		this.setTick(new TickClass());
-		this.addMouse();
-		this.addKeyboard();
-		engine=this;
+
 		
-		Commands.init(this);
-//		LevelLoader levelLoader = new LevelLoader();
-		DialogFile.loadDialogFile();
-		loadWorldsIntoMemory();
-//		LevelObject obj = levelLoader.loadFromFile(file,levelID);
 		
-		getSave().loadFromFile("file.save");
-		
-		*/
-		for(Entry<String,FileHandle> entry:FileChecker.checkFolderToHashMap("", "wav").entrySet()) {
-			getSound().addSound(FileChecker.splitNonRegex(entry.getKey(),".")[0],entry.getValue(),false);
+		String fileNames[] = {};
+		for(String fileName:fileNames) {			
+			FileHandle fileHandle = Gdx.files.internal(fileName);
+			getSound().addSound(fileHandle.nameWithoutExtension(),fileHandle,false);
 		}
 //		getSound().addSound("select", StartClass.getURL("resources/select.wav"),false);
 //		getSound().addSound("bg_1",  StartClass.getURL("resources/bg_1.wav"),true);
@@ -142,34 +140,33 @@ public class GameClass extends AbstractGameClass {
 	
 		
 	}
+
+
+	public static String[] splitNonRegex(String input, String delim)
+		{
+    List<String> l = new ArrayList<String>();
+    int offset = 0;
+
+    while (true)
+    	{
+	        int index = input.indexOf(delim, offset);
+	        if (index == -1)
+	        {
+	            l.add(input.substring(offset));
+	            return l.toArray(new String[l.size()]);
+	        } else
+	        {
+	            l.add(input.substring(offset, index));
+	            offset = (index + delim.length());
+	        }
+    	}
+	}
+
 	
 
 	@Override
 	public void Init() {
-		Zone world = new Zone(this,10,10,3);
-		Random random = new Random();
-		for(int x=0;x<world.getSizeX();x++)
-			for(int z=0;z<world.getSizeZ();z++) {
-				if(x > 7)
-					world.setBlockID(x, z, 8);
-				else if(x == 7)
-					world.setBlockID(x, z, 4);
-				else if(x == 3)
-					world.setBlockID(x, z, 3);
-				else
-					world.setBlockID(x, z, random.nextInt(10)==0?2:1);
-			}
-		
-		world.setBlockID(4, 5, 16);
-		world.setBlockID(5, 5, 17);
-		world.setBlockID(4, 4, 18);
-		world.setBlockID(5, 4, 19);
-//		world.setBlockID(5, 4, 20);
-//		world.setBlockID(6, 4, 21);
-		world.setPlayer(new Player(0,0));
-		world.addEntity(new EntityLeek(2,2));
-		this.setWorld(world);
-//		load(this.getStartWorld());
+//		this.setWorld(world);
 	}
 
 	@Override
@@ -180,8 +177,8 @@ public class GameClass extends AbstractGameClass {
 
 	@Override
 	public void initStartScreen() {
-		this.setScreen(TickClassHandler.handler.getTick(this, 0));
-	    Gdx.input.setInputProcessor(TickClassHandler.handler.getTick(this, 0));
+//		this.setScreen(TickClassHandler.handler.getTick(this, 0));
+//	    Gdx.input.setInputProcessor(TickClassHandler.handler.getTick(this, 0));
 	}
 
 }
