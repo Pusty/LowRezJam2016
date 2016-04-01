@@ -1,5 +1,6 @@
 package game.engine.world;
 
+import game.engine.entity.Player;
 import game.engine.main.GameClass;
 
 
@@ -11,7 +12,7 @@ public class World {
 	int sizex;
 	int sizey;
 	Chunk[] chunkarray;
-//	Player player;
+	Player player;
 	GameClass mainclass;
 
 	public World(GameClass m,int sx, int sy) {
@@ -26,13 +27,13 @@ public class World {
 	}
 
 
-//	public Player getPlayer(){
-//		return player;
-//	}
+	public Player getPlayer(){
+		return player;
+	}
 	
-//	public void setPlayer(Player p){
-//		player=p;
-//	}
+	public void setPlayer(Player p){
+		player=p;
+	}
 	
 	public int getBlockID(int x, int y) {
 		int wx = x/16;

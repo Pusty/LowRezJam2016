@@ -1,6 +1,7 @@
 package game.engine.main;
 
-import game.classes.GameRender;
+import game.classes.GameTick;
+import game.engine.entity.Player;
 import game.engine.world.World;
 import game.engine.world.WorldLoader;
 
@@ -18,6 +19,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.utils.JsonValue;
 
 import me.pusty.util.AbstractGameClass;
+import me.pusty.util.PixelLocation;
 import me.pusty.util.RawAnimation;
 import me.pusty.util.json.JsonHandler;
 
@@ -32,6 +34,8 @@ public class GameClass extends AbstractGameClass {
 		
 	}
 	
+	
+
 	
 	public void loadDefault() {
 
@@ -182,7 +186,15 @@ public class GameClass extends AbstractGameClass {
 	@Override
 	public void Init() {
 		setWorld(WorldLoader.loadWorld(this,Gdx.files.internal("resources/map.csv")));
+		getWorld().setPlayer(new Player(0,0));
 	}
+	
+	
+	public PixelLocation getCamLocation() {
+//		return new PixelLocation(0,0);
+		return this.getWorld().getPlayer().getLocation();
+	}
+	
 	
 	World currentWorld = null;
 	public void setWorld(World w) {
@@ -201,9 +213,9 @@ public class GameClass extends AbstractGameClass {
 	@Override
 	public void initStartScreen() {
 //		this.setScreen(TickClassHandler.handler.getTick(this, 0));
-//	    Gdx.input.setInputProcessor(TickClassHandler.handler.getTick(this, 0));
-		
-		this.setScreen(new GameRender(this));
+		GameTick gameTick = new GameTick(this);
+		this.setScreen(gameTick);
+	    Gdx.input.setInputProcessor(gameTick);
 	}
 
 }
