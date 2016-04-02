@@ -9,6 +9,8 @@ public class EntityLiving extends Entity {
 
 	int direction = 0;
 	int lastDirection = 1;
+	boolean isJumping = false;
+	boolean onGround = true;
 	public EntityLiving(int x, int z) {
 		super(x, z);
 	}
@@ -17,6 +19,29 @@ public class EntityLiving extends Entity {
 	}
 	public int getDirection() {
 		return direction;
+	}
+	public void setJumping(boolean b) {
+		isJumping=b;
+	}
+	
+	public boolean getJumping() {
+		return isJumping;
+	}
+	
+	public boolean onGround() {
+		return onGround;
+	}
+	
+	public void setGround(boolean b) {
+		onGround=b;
+	}
+	
+	public void jump() {
+		if(onGround && !isJumping) {
+			traveled = 20;
+			isJumping=true;
+			onGround=false;
+		}
 	}
 	
 	public void setDirection(int d) {
@@ -33,22 +58,13 @@ public class EntityLiving extends Entity {
 	
 	public boolean hasDirections() { return false; }
 	
-	int walkAnimationRunned = 0;
 	public String getImage() {
 		if(img!=null)
 			return img;
 		if(getDirection() == 0 || getMovingTexture() == null) {
-			if(!hasDirections())
-				return getTextureName();
-			else
-				return getTextureName()+"_"+(this.getLastDirection()-1);
+//				return getTextureName()+"_"+(this.getLastDirection()-1);
 		}else if(getDirection() != 0) {
-			float percent = ((float)getSpeed()-getTraveled())/getSpeed();
-			int frame = Math.round(percent * 1) + walkAnimationRunned ; // frame = process * framecount
-			if(!hasDirections())
-				return getMovingTexture()+"_"+frame;
-			else
-				return getMovingTexture()+"_"+((this.getDirection()-1)*4 + frame);
+//				return getMovingTexture()+"_"+((this.getDirection()-1)*4 + frame);
 		}
 		return getTextureName();
 	}
@@ -67,14 +83,17 @@ public class EntityLiving extends Entity {
 	}
 	
 	public PixelLocation getAddLocation(boolean tick) {
-		if(tick)
-			walkAnimationRunned = walkAnimationRunned==0?2:0;
 		if(animation!=null) return new PixelLocation(0,0);
-		else if(direction==1)
-			return new PixelLocation(1,0);
+		
+		PixelLocation location = new PixelLocation(0,0);
+		if(direction==1)
+			location = location.add(new PixelLocation(1,0));
 		else if(direction==2)
-			return new PixelLocation(-1,0);
-		return new PixelLocation(0,0);
+			location = location.add(new PixelLocation(-1,0));
+		
+		if(isJumping)
+			location = location.add(new PixelLocation(0, (int)Math.ceil((float)traveled/10)));
+		return location;
 	}
 
 	
@@ -95,18 +114,7 @@ public class EntityLiving extends Entity {
 		
 	}
 	int traveled = 0;
-	public void startWalking(boolean wall) {
-		traveled = getSpeed();
-		moving = wall;
-	}
-	boolean moving=true;
-	public boolean isMoving() {
-		return moving;
-	}
-	//Get Speed 30 = 1 sec
-	public int getSpeed() {
-		return 10;
-	}
+
 	public int getTraveled() {
 		return traveled;
 	}
@@ -116,7 +124,10 @@ public class EntityLiving extends Entity {
 		if(traveled > 0)
 			traveled--;
 		
-		if(traveled <= 0 && (setDirection || setDirectionNull) ) {
+		if(traveled == 0 && isJumping)
+			isJumping = false;
+		
+		if(setDirection || setDirectionNull) {
 			if(setDirectionNull && setDirectionInt==0) 
 				setDirection(0);
 			else

@@ -45,6 +45,10 @@ public class GameTick extends Tick{
 			if(type==0)
 				player.queueDirection(2);
 			return true;
+		case Keys.SPACE:
+			if(type==0)
+				player.jump();
+			return true;
 		}
 		
 		return false;
@@ -72,20 +76,55 @@ public class GameTick extends Tick{
 					&& !Gdx.input.isKeyPressed(Keys.LEFT) && !Gdx.input.isKeyPressed(Keys.RIGHT))
 				player.setDirection(0);
 		}
-		if(player.getTraveled()<=0 && player.getDirection()!=0) {		
-			PixelLocation newLoc = player.getLocation().add(player.getAddLocation(true));
-
-			// COLLISION
-			if(true) {
-				player.getLocation().set(newLoc);
-				player.startWalking(true);
-			}else
-				player.startWalking(false);
-
+		PixelLocation newLoc = player.getLocation().add(player.getAddLocation(true));
+		if(true) {
+			if(newLoc.x != player.getX() || newLoc.y != player.getY()) {
+				BlockLocation[] blocks = get2x2HitBox(newLoc);
+				boolean collision = false;
+				for(int b=0;b<blocks.length;b++)
+					if(world.getBlockID(blocks[b].getX(),blocks[b].getY())!=-1)
+						collision = true;
+				if(!collision) 
+						player.getLocation().set(newLoc);
+				else
+					player.setJumping(false);
+			}
+			{
+				PixelLocation newLocGravity = player.getLocation();
+				if(!player.getJumping())
+					newLocGravity = newLocGravity.add(new PixelLocation(0,-1));
+				BlockLocation[] blocks = get2x2HitBox(newLocGravity);
+				boolean collision = false;
+				for(int b=0;b<blocks.length;b++)
+					if(world.getBlockID(blocks[b].getX(),blocks[b].getY())!=-1)
+						collision = true;
+				if(!collision)
+					player.getLocation().set(newLocGravity);
+				else
+					player.setGround(true);
+			}
 		}
 		
 		
 	}
+	
+	private static BlockLocation[] get2x2HitBox(PixelLocation loc) {
+		BlockLocation[][] b = new BlockLocation[4][];
+		b[0] = loc.toBlocks();
+		b[1] = loc.add(new PixelLocation(Config.tileSize,0)).toBlocks();
+		b[2] = loc.add(new PixelLocation(0,Config.tileSize)).toBlocks();
+		b[3] = loc.add(new PixelLocation(Config.tileSize,Config.tileSize)).toBlocks();
+		BlockLocation[] result = new BlockLocation[b[0].length + b[1].length + b[2].length + b[3].length];
+		int index = 0;
+		for(int a=0;a<b.length;a++)
+			for(int i=0;i<b[a].length;i++) {
+				result[index] = b[a][i];
+				index++;
+			}
+		return result;
+	}
+	
+	
 
 	@Override
 	public void mouse(AbstractGameClass engine, int screenX, int screenY,
@@ -103,7 +142,7 @@ public class GameTick extends Tick{
 //		batch.draw(e.getImageHandler().getImage("tile_0"),0,0);
 		GameClass game = (GameClass)e;	
 		World world = game.getWorld();
-		int currentChunkIndex = -1;
+//		int currentChunkIndex = -1;
 		
 		for(int chunkIndex=0;chunkIndex<game.getWorld().getChunkArray().length;chunkIndex++) {
 			Chunk c = game.getWorld().getChunkArray()[chunkIndex];
@@ -118,6 +157,8 @@ public class GameTick extends Tick{
 				}
 			}
 		}
+		
+		world.getPlayer().render(e, batch);
 	}
 
 	private void renderBlock(AbstractGameClass e,SpriteBatch b,int x,int y,int id) {

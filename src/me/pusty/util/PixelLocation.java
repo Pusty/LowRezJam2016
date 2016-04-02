@@ -1,5 +1,7 @@
 package me.pusty.util;
 
+import game.engine.main.Config;
+
 public class PixelLocation {
 	public int x;
 	public int y;
@@ -12,6 +14,29 @@ public class PixelLocation {
 		int cx=getX()-l.getX();
 		int cy=getY()-l.getY();
 		return new PixelLocation(cx,cy);
+	}
+	
+	public BlockLocation[] toBlocks() {
+		BlockLocation[] result = null;
+		if(x%Config.tileSize==0 && y%Config.tileSize==0) {
+			result = new BlockLocation[1];
+			result[0] = new BlockLocation(x/Config.tileSize,y/Config.tileSize);
+		}else if(x%Config.tileSize==0 && y%Config.tileSize!=0) {
+			result = new BlockLocation[2];
+			result[0] = new BlockLocation(x/Config.tileSize,(int) Math.ceil((double)y/Config.tileSize));
+			result[1] = new BlockLocation(x/Config.tileSize,(int) Math.floor((double)y/Config.tileSize));
+		}else if(x%Config.tileSize!=0 && y%Config.tileSize==0) {
+			result = new BlockLocation[2];
+			result[0] = new BlockLocation((int)Math.ceil((double)x/Config.tileSize),y/Config.tileSize);
+			result[1] = new BlockLocation((int)Math.floor((double)x/Config.tileSize),y/Config.tileSize);
+		}else {
+			result = new BlockLocation[4];
+			result[0] = new BlockLocation((int)Math.ceil((double)x/Config.tileSize),(int) Math.ceil((double)y/Config.tileSize));
+			result[1] = new BlockLocation((int)Math.floor((double)x/Config.tileSize),(int) Math.floor((double)y/Config.tileSize));	
+			result[2] = new BlockLocation((int)Math.floor((double)x/Config.tileSize),(int) Math.ceil((double)y/Config.tileSize));
+			result[3] = new BlockLocation((int)Math.ceil((double)x/Config.tileSize),(int) Math.floor((double)y/Config.tileSize));
+		}
+		return result;
 	}
 	
 	public static PixelLocation getNorm(PixelLocation v) {

@@ -186,14 +186,15 @@ public class GameClass extends AbstractGameClass {
 	@Override
 	public void Init() {
 		setWorld(WorldLoader.loadWorld(this,Gdx.files.internal("resources/map.csv")));
-		getWorld().setPlayer(new Player(0,0));
+		getWorld().setPlayer(new Player(8,16));
 	}
 	
 	
 	public PixelLocation getCamLocation() {
-//		return new PixelLocation(0,0);
-		return this.getWorld().getPlayer().getLocation();
+		return this.getWorld().getPlayer().getLocation().add(new PixelLocation(-26,-26));
 	}
+	
+	
 	
 	
 	World currentWorld = null;

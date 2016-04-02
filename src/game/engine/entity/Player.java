@@ -1,5 +1,10 @@
 package game.engine.entity;
 
+import me.pusty.util.AbstractGameClass;
+
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
+
 
 
 public class Player extends EntityLiving {
@@ -18,9 +23,11 @@ public class Player extends EntityLiving {
 	
 	public boolean hasDirections() { return false; }
 
-	//Get Speed 30 = 1 sec
-	public int getSpeed() {
-		return 1;
+	public void render(AbstractGameClass e,SpriteBatch g) {
+		try {
+			TextureRegion image = e.getImageHandler().getImage(getImage());
+			g.draw(image,26,26);
+		} catch(Exception ex) { System.err.println(getImage()); }
 	}
 	
 }
