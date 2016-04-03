@@ -171,6 +171,9 @@ public abstract class AbstractGameClass extends Game {
 
 	}
 	
+	public void cameraTick() {
+		
+	}
 	public void realRender() {
 			fbo.begin();
         	if (isRunning()) {

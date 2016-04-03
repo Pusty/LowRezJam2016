@@ -184,7 +184,9 @@ public abstract class Tick implements Screen, InputProcessor  {
 	public void render(float delta) {
 		if(engine.isTimeRunning())
 			tick(E(),delta);
-			render(E(),delta);
+		E().cameraTick();
+		
+		render(E(),delta);
 		
 
 	}

@@ -1,5 +1,7 @@
 package me.pusty.util;
 
+import game.engine.main.Config;
+
 public class BlockLocation {
 	public int x;
 	public int y;
@@ -7,7 +9,9 @@ public class BlockLocation {
 		this.x=x;
 		this.y=y;
 	}
-	
+	public PixelLocation toPixelLocation() {
+		return new PixelLocation(this.x*Config.tileSize,this.y*Config.tileSize);
+	}
 	public BlockLocation sub(BlockLocation l){
 		int cx=getX()-l.getX();
 		int cy=getY()-l.getY();

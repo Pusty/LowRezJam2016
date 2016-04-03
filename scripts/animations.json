@@ -1,2 +1,17 @@
 [
+    {
+        "name": "test_player",
+        "textures": [
+			"player",
+			"tile_0",
+			"player",
+			"tile_1"
+		],
+        "times": [
+			25,
+			25,
+			25,
+			25
+		]
+    }
 ]

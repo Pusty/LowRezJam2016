@@ -102,5 +102,11 @@ public class PixelLocation {
 		return new PixelLocation(-x,-y);
 	}
 
+	public PixelLocation addVelocity(Velocity velo) {
+		PixelLocation p = new PixelLocation(x,y);
+		p = p.add(new PixelLocation(Math.round(velo.getX()),Math.round(velo.getY())));
+		return p;
+	}
+
 
 }

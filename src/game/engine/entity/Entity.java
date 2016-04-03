@@ -1,5 +1,7 @@
 package game.engine.entity;
 
+import game.classes.SpaceTick;
+import game.engine.main.GameClass;
 import me.pusty.util.AbstractGameClass;
 import me.pusty.util.PixelLocation;
 import me.pusty.util.RawAnimation;
@@ -24,6 +26,26 @@ public class Entity{
 	public void playAnimation() {
 		
 	}
+	
+	public void setSpeachText(String text) {
+		speachText = text;
+	}
+	String speachText = null;
+	public void renderExtra(AbstractGameClass e,SpriteBatch b) {
+		if(speachText==null)return;
+			try {
+				PixelLocation cam = ((GameClass)e).getCamLocation();
+				PixelLocation move = new PixelLocation(getX() - cam.getX(), getY() - cam.getY());
+				move = move.add(new PixelLocation(-speachText.length()*5/2 + 8,8));
+				move = move.add(new PixelLocation(0 ,8));
+				SpaceTick.renderSmallText(e, b, move, speachText);
+			} catch(Exception ex) { System.err.println(getImage()); }
+		
+	}
+	
+	public void tickTraveled(AbstractGameClass game) {
+		
+	}
 
 
 	public PixelLocation getLocation(){
@@ -41,7 +63,9 @@ public class Entity{
 	public void render(AbstractGameClass e,SpriteBatch g) {
 		try {
 			TextureRegion image = e.getImageHandler().getImage(getImage());
-			g.draw(image,getLocation().getX(),getLocation().getY());
+			PixelLocation cam = ((GameClass)e).getCamLocation();
+			PixelLocation move = new PixelLocation(getX() - cam.getX(), getY() - cam.getY());
+			g.draw(image,move.getX(),move.getY());
 		} catch(Exception ex) { System.err.println(getImage()); }
 	}
 	

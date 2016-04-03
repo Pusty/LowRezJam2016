@@ -1,6 +1,7 @@
 package game.engine.main;
 
 import game.classes.GameTick;
+import game.classes.SpaceTick;
 import game.engine.entity.Player;
 import game.engine.world.World;
 import game.engine.world.WorldLoader;
@@ -19,6 +20,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.utils.JsonValue;
 
 import me.pusty.util.AbstractGameClass;
+import me.pusty.util.BlockLocation;
 import me.pusty.util.PixelLocation;
 import me.pusty.util.RawAnimation;
 import me.pusty.util.json.JsonHandler;
@@ -35,8 +37,22 @@ public class GameClass extends AbstractGameClass {
 	}
 	
 	
-
+	public int cameraPoint = -1;
+	public PixelLocation cameraPointLast = new PixelLocation(0,0);
 	
+	public int getCameraPoint() {
+		return cameraPoint;
+	}
+	public void setCameraPoint(int i) {
+		cameraPoint = i;
+	}
+	
+	public PixelLocation getLastCameraPoint() {
+		return cameraPointLast;
+	}
+	public void setLastCameraPoint(PixelLocation l) {
+		cameraPointLast = l;
+	}
 	public void loadDefault() {
 
 	}
@@ -58,28 +74,33 @@ public class GameClass extends AbstractGameClass {
 			
 			FileHandle fileHandle = Gdx.files.internal("resources/chars.png");
 			{
-				String[] letter = { "A", "B", "C", "D", "E", "F", "G", "H", "I",
-						"J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U",
-						"V", "W", "X", "Y", "Z", ":", "!", "?", ".", "[", "]", "0",
-						"1", "2", "3", "4", "5", "6", "7", "8", "9", "(", ")", "+",
-						"-", "/", " ", "_","," };
-				
-				
+				char[] smallletters = { ' ', 'A','B','C','D','E','F','G','H','I',
+						'J', 'K','L','M','N','O','P','Q','R','S',
+						'T', 'U','V','W','X','Y','Z','a','b','c',
+						'd', 'e','f','g','h','i','j','k','l','m',
+						'n', 'o','p','q','r','s','t','u','v','w',
+						'x', 'y','z','0','1','2','3','4','5','6',
+						'7', '8','9','!','"','%','&','/','(',')',
+						'=', '?','[',']','{','}','\\','|','<','>',
+						'*', '+','~',"'".toCharArray()[0],'#','-','_','.',':',',',
+						';'};
 
-				Texture tex = new Texture(fileHandle);
-				TextureRegion[][]  tmp = TextureRegion.split(tex, tex.getWidth()/8, tex.getHeight()/8);
-		        int index = 0;
-		        for (int i = 0; i < 8; i++) {
-		            for (int j = 0; j < 8; j++) {
-		            	getImageHandler().addImage("char_" + letter[index], tmp[i][j]);
-		            	getImageHandler().addImage("small_" + letter[index], tmp[i][j]);
-		                index++;
-		                if(index >= letter.length)
-		                	break;
-		            }
-	                if(index >= letter.length)
-	                	break;
-		        }
+
+
+						Texture tex = new Texture(fileHandle);
+						TextureRegion[][]  tmp = TextureRegion.split(tex, tex.getWidth()/10, tex.getHeight()/10);
+						int index = 0;
+						for (int i = 0; i < tmp.length; i++) {
+						    for (int j = 0; j < tmp[i].length; j++) {
+						    	getImageHandler().addImage("small_" + smallletters[index], tmp[i][j]);
+						    	getImageHandler().addImage("char_" + smallletters[index], tmp[i][j]);
+						        index++;
+						        if(index >= smallletters.length)
+						        	break;
+						    }
+						    if(index >= smallletters.length)
+						    	break;
+						}
 		        
 			}
 			
@@ -190,8 +211,57 @@ public class GameClass extends AbstractGameClass {
 	}
 	
 	
+	public int cameraTick = 0;
+	
 	public PixelLocation getCamLocation() {
-		return this.getWorld().getPlayer().getLocation().add(new PixelLocation(-26,-26));
+		PixelLocation goal = getCamPointLocation(getCameraPoint());
+		PixelLocation start = getLastCameraPoint();
+		int cTick = cameraTick>=0?cameraTick:0;
+		int xPos = Math.round((start.getX() + (goal.getX()-start.getX()) * ((50f-cTick)/50)));
+		int yPos = Math.round((start.getY() + (goal.getY()-start.getY()) * ((50f-cTick)/50)));
+		PixelLocation current = new PixelLocation(xPos,yPos);
+		return current;
+	}
+	
+	public PixelLocation getCamPointLocation(int point) {
+		PixelLocation goal = new PixelLocation(0,0);
+		if(point==1) {
+			goal = (new BlockLocation(5,5).toPixelLocation().add(new PixelLocation(-32 + 4,-32 + 4)));
+		}else if(point==2) {
+			goal =  (new BlockLocation(0,0).toPixelLocation().add(new PixelLocation(-32 + 4,-32 + 4)));
+		}else if(point==0 || point==-1)
+			goal = this.getWorld().getPlayer().getLocation().add(new PixelLocation(-26,-26));
+		
+		return goal;
+	}
+	
+	public void cameraTick() {
+		if(getCameraPoint()==-1)return;
+		if(getCameraPoint()==0 && (cameraTick <= 0 && cameraTick > -50))
+			setTimeRunning(true);
+		else
+			setTimeRunning(false);
+		
+		if(cameraTick == 0) {
+			//Event Here
+			cameraTick--;
+		}
+		
+		if(cameraTick > 0)
+			cameraTick--;		
+		else if(cameraTick > -50) 
+			cameraTick--;
+		else {
+			if(getCameraPoint()>0) {
+				cameraTick = 50;
+				this.setLastCameraPoint( getCamPointLocation(getCameraPoint()));
+				setCameraPoint(0);
+			}else {
+				cameraTick=0;
+				setCameraPoint(-1);
+				setTimeRunning(true);
+			}
+		}
 	}
 	
 	
@@ -214,6 +284,12 @@ public class GameClass extends AbstractGameClass {
 	@Override
 	public void initStartScreen() {
 //		this.setScreen(TickClassHandler.handler.getTick(this, 0));
+		SpaceTick screenTick = new SpaceTick(this);
+		this.setScreen(screenTick);
+	    Gdx.input.setInputProcessor(screenTick);
+	}
+	
+	public void startGame() {
 		GameTick gameTick = new GameTick(this);
 		this.setScreen(gameTick);
 	    Gdx.input.setInputProcessor(gameTick);

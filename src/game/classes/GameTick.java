@@ -1,5 +1,6 @@
 package game.classes;
 
+import game.engine.entity.Entity;
 import game.engine.entity.Player;
 import game.engine.main.Config;
 import game.engine.main.GameClass;
@@ -22,6 +23,7 @@ import me.pusty.util.AbstractGameClass;
 import me.pusty.util.BlockLocation;
 import me.pusty.util.PixelLocation;
 import me.pusty.util.Tick;
+import me.pusty.util.Velocity;
 
 public class GameTick extends Tick{
 
@@ -49,6 +51,28 @@ public class GameTick extends Tick{
 			if(type==0)
 				player.jump();
 			return true;
+		case Keys.Q:
+			if(type==0)
+				player.skillQ(((GameClass)e));
+			return true;
+		case Keys.E:
+			if(type==0)
+				player.skillE(((GameClass)e));
+			return true;
+		case Keys.NUM_1:
+			return true;
+		case Keys.NUM_2:
+			((GameClass)e).setCameraPoint(1);
+			((GameClass)e).setLastCameraPoint(((GameClass)e).getCamPointLocation(0));
+			((GameClass)e).cameraTick=50;
+			player.setAnimation(e.getAnimationHandler().getAnimation("test_player"));
+			player.setSpeachText("TEXT");
+			return true;
+		case Keys.NUM_3:
+			((GameClass)e).setCameraPoint(2);
+			((GameClass)e).setLastCameraPoint(((GameClass)e).getCamPointLocation(0));
+			((GameClass)e).cameraTick=50;
+			return true;
 		}
 		
 		return false;
@@ -68,47 +92,97 @@ public class GameTick extends Tick{
 		if(ticks>0)
 			ticks--;
 		
-	
+		game.cameraTick();
 		Player player = world.getPlayer();
-		player.tickTraveled();
+		player.tickTraveled(e);
 		if(player.getTraveled()<=0 && player.getDirection()!=0) {
 			if(!Gdx.input.isKeyPressed(Keys.A) && !Gdx.input.isKeyPressed(Keys.D) 
 					&& !Gdx.input.isKeyPressed(Keys.LEFT) && !Gdx.input.isKeyPressed(Keys.RIGHT))
 				player.setDirection(0);
 		}
-		PixelLocation newLoc = player.getLocation().add(player.getAddLocation(true));
-		if(true) {
+		Velocity velo = player.getVelocity();
+		if(velo==null) velo = new Velocity(0,0);
+		velo.add(player.getAddLocation(true));
+		
+		if(!player.getJumping())
+			velo.add(new Velocity(0,-2));
+		
+		PixelLocation newLoc = player.getLocation().addVelocity(velo);
 			if(newLoc.x != player.getX() || newLoc.y != player.getY()) {
 				BlockLocation[] blocks = get2x2HitBox(newLoc);
 				boolean collision = false;
 				for(int b=0;b<blocks.length;b++)
-					if(world.getBlockID(blocks[b].getX(),blocks[b].getY())!=-1)
+					if(collisonBlock(player,newLoc,blocks[b].getX(),blocks[b].getY(),world.getBlockID(blocks[b].getX(),blocks[b].getY()))) {
 						collision = true;
+						break;
+					}
 				if(!collision) 
 						player.getLocation().set(newLoc);
-				else
-					player.setJumping(false);
+				else {
+					collision = false;
+					if(velo.getY() != 0f) {					
+						newLoc = player.getLocation().addVelocity(new Velocity(0f,velo.getY()));
+						BlockLocation[] blocksY = get2x2HitBox(newLoc);
+						for(int b=0;b<blocksY.length;b++)
+							if(collisonBlock(player,newLoc,blocksY[b].getX(),blocksY[b].getY(),world.getBlockID(blocksY[b].getX(),blocksY[b].getY()))) {
+								collision = true;
+								break;
+							}
+						if(!collision) 
+								player.getLocation().set(newLoc);
+						else if(velo.getY()<0)
+								player.setGround(true);
+						
+					}
+					if((collision || velo.getY() == 0f) && velo.getX() != 0f) {
+						newLoc = player.getLocation().addVelocity(new Velocity(velo.getX(),0f));
+						BlockLocation[] blocksX = get2x2HitBox(newLoc);
+						collision = false;
+						for(int b=0;b<blocksX.length;b++)
+							if(collisonBlock(player,newLoc,blocksX[b].getX(),blocksX[b].getY(),world.getBlockID(blocksX[b].getX(),blocksX[b].getY()))) {
+								collision = true;
+								break;
+							}
+						if(!collision) 
+								player.getLocation().set(newLoc);
+					}
+					
+				}
 			}
-			{
-				PixelLocation newLocGravity = player.getLocation();
-				if(!player.getJumping())
-					newLocGravity = newLocGravity.add(new PixelLocation(0,-1));
-				BlockLocation[] blocks = get2x2HitBox(newLocGravity);
-				boolean collision = false;
-				for(int b=0;b<blocks.length;b++)
-					if(world.getBlockID(blocks[b].getX(),blocks[b].getY())!=-1)
-						collision = true;
-				if(!collision)
-					player.getLocation().set(newLocGravity);
-				else
-					player.setGround(true);
-			}
-		}
 		
+		
+			
+			
+			for(int entityIndex=0;entityIndex<world.getEntityArray().length;entityIndex++) {
+				Entity entity = world.getEntityArray()[entityIndex];
+				if(entity==null)continue;
+				entity.tickTraveled(e);
+			}
 		
 	}
 	
-	private static BlockLocation[] get2x2HitBox(PixelLocation loc) {
+	public static boolean collisonBlock(Entity entity,PixelLocation loc,int x,int y,int id) {
+		if(id==-1) return false;
+		if(id == 2 || id == 3 || id == 4) { //Platform
+			if(!(entity instanceof Player))
+				return false;
+			boolean ret = entity.getY()-6>y*Config.tileSize;			
+			return ret;
+		}
+		
+		if(id==1) {
+			if(entity instanceof Player) {
+				Player player = (Player)entity;
+				if(player.isGhost()) {
+					player.setGhostUsed(true);
+					return false;
+				}
+			}
+		}
+		return true;
+	}
+	
+	public static BlockLocation[] get2x2HitBox(PixelLocation loc) {
 		BlockLocation[][] b = new BlockLocation[4][];
 		b[0] = loc.toBlocks();
 		b[1] = loc.add(new PixelLocation(Config.tileSize,0)).toBlocks();
@@ -144,26 +218,56 @@ public class GameTick extends Tick{
 		World world = game.getWorld();
 //		int currentChunkIndex = -1;
 		
+		BlockLocation[] ghostBlocks = null;
+		if(world.getPlayer().isGhost()) {
+			ghostBlocks = GameTick.get2x2HitBox(world.getPlayer().getLocation());
+		}
+		
 		for(int chunkIndex=0;chunkIndex<game.getWorld().getChunkArray().length;chunkIndex++) {
 			Chunk c = game.getWorld().getChunkArray()[chunkIndex];
 			int blockID = 0;
 			BlockLocation blockLocation;
 			for (int by = 0; by < c.getSizeY(); by++) {
 				for (int bx = 0; bx < c.getSizeX(); bx++) {
-					blockID = c.getBlockID(bx, by);
+					blockID =  c.getBlockID(bx, by);
 					blockLocation = new BlockLocation(c.getChunkX() * c.getSizeX()
 							+ bx, c.getChunkY() * c.getSizeY() + by);
-					renderBlock(e,batch,blockLocation.getX(), blockLocation.getY(),blockID);
+					if(blockID!=1 || ghostBlocks==null)
+						renderBlock(e,batch,blockLocation.getX(), blockLocation.getY(),blockID);
+					else
+						renderGhostBlock(e,batch,blockLocation.getX(), blockLocation.getY(),blockID,ghostBlocks);
 				}
 			}
 		}
 		
+		for(int entityIndex=0;entityIndex<world.getEntityArray().length;entityIndex++) {
+			Entity entity = world.getEntityArray()[entityIndex];
+			if(entity==null)continue;
+			entity.renderTick(e, entityIndex);
+			entity.render(e, batch);
+			entity.renderExtra(e, batch);
+		}
+		world.getPlayer().renderTick(e, -1);
 		world.getPlayer().render(e, batch);
+		world.getPlayer().renderExtra(e, batch);
 	}
 
 	private void renderBlock(AbstractGameClass e,SpriteBatch b,int x,int y,int id) {
 		if(id<0) return;
 		PixelLocation cam = ((GameClass)e).getCamLocation();
-		b.draw(e.getImageHandler().getImage("tile_"+id), x*Config.tileSize - cam.getX(), y*Config.tileSize - cam.getY(), Config.tileSize ,Config.tileSize);
+		PixelLocation move = new PixelLocation( x*Config.tileSize - cam.getX(), y*Config.tileSize - cam.getY());
+		b.draw(e.getImageHandler().getImage("tile_"+id), move.getX(), move.getY());
+	}
+	
+	private void renderGhostBlock(AbstractGameClass e,SpriteBatch b,int x,int y,int id,BlockLocation[] ghosts) {
+		if(id<0) return;
+		PixelLocation cam = ((GameClass)e).getCamLocation();
+		PixelLocation move = new PixelLocation( x*Config.tileSize - cam.getX(), y*Config.tileSize - cam.getY());
+		
+		for(int index=0;index<ghosts.length;index++)
+			if(ghosts[index].getX()==x && ghosts[index].getY()==y)
+				id = 0;
+		
+		b.draw(e.getImageHandler().getImage("tile_"+id), move.getX(), move.getY());
 	}
 }

@@ -1,8 +1,13 @@
 package game.engine.entity;
 
 
+import game.classes.SpaceTick;
+import game.engine.main.GameClass;
 import me.pusty.util.AbstractGameClass;
 import me.pusty.util.PixelLocation;
+import me.pusty.util.Velocity;
+
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 
 public class EntityLiving extends Entity {
@@ -11,9 +16,19 @@ public class EntityLiving extends Entity {
 	int lastDirection = 1;
 	boolean isJumping = false;
 	boolean onGround = true;
+	Velocity velocity = null;
 	public EntityLiving(int x, int z) {
 		super(x, z);
 	}
+	
+	public Velocity getVelocity() {
+		return velocity;
+	}
+	
+	public void setVelocity(Velocity v) {
+		velocity = v;
+	}
+	
 	public int getLastDirection() {
 		return lastDirection;
 	}
@@ -71,8 +86,7 @@ public class EntityLiving extends Entity {
 	
 	
 	public void renderTick(AbstractGameClass engine,int ind){
-		if(animation!=null) {
-			
+		if(animation!=null) {			
 			String img = animation.getFrame();
 			if(img!=null)
 			setImage(img);
@@ -82,17 +96,17 @@ public class EntityLiving extends Entity {
 			setDefault();
 	}
 	
-	public PixelLocation getAddLocation(boolean tick) {
-		if(animation!=null) return new PixelLocation(0,0);
+	public Velocity getAddLocation(boolean tick) {
+		if(animation!=null) return new Velocity(0,0);
 		
-		PixelLocation location = new PixelLocation(0,0);
+		Velocity location = new Velocity(0,0);
 		if(direction==1)
-			location = location.add(new PixelLocation(1,0));
+			location.add(new Velocity(1,0));
 		else if(direction==2)
-			location = location.add(new PixelLocation(-1,0));
+			location.add(new Velocity(-1,0));
 		
 		if(isJumping)
-			location = location.add(new PixelLocation(0, (int)Math.ceil((float)traveled/10)));
+			location.add(new Velocity(0, (int)Math.ceil((float)traveled/10)));
 		return location;
 	}
 
@@ -118,9 +132,10 @@ public class EntityLiving extends Entity {
 	public int getTraveled() {
 		return traveled;
 	}
-	public void tickTraveled() {
+	public void tickTraveled(AbstractGameClass game) {
 		if(animation!=null) return;
 		
+		this.setSpeachText(null);
 		if(traveled > 0)
 			traveled--;
 		
@@ -137,4 +152,18 @@ public class EntityLiving extends Entity {
 			setDirectionNull = false;
 		}
 	}
+
+	public void renderExtra(AbstractGameClass e,SpriteBatch b) {
+		if(speachText==null)return;
+			try {
+				PixelLocation cam = ((GameClass)e).getCamLocation();
+				PixelLocation move = new PixelLocation(getX() - cam.getX(), getY() - cam.getY());
+				move = move.add(new PixelLocation(-speachText.length()*5/2 + 8,8));
+				int multip = getLastDirection()==1?1:-1;
+				move = move.add(new PixelLocation(16*multip ,8));
+				SpaceTick.renderSmallText(e, b, move, speachText);
+			} catch(Exception ex) { System.err.println(getImage()); }
+		
+	}
+	
 }
