@@ -27,7 +27,8 @@ public class Player extends EntityLiving {
 	
 	public void skillQ(GameClass g) {
 		if(shootCooldown==-1)
-			shootCasted=30*2;
+//			shootCasted=30*2;
+			shootCasted=0;
 	}
 	public void skillE(GameClass e) {
 		if(ghostCooldown==-1) {
@@ -43,7 +44,7 @@ public class Player extends EntityLiving {
 
 
 	public void skillUnQ(GameClass g) {
-		shootCasted=-1;
+//		shootCasted=-1;
 	}
 	public void skillUnE(GameClass e) {
 	}
@@ -94,8 +95,8 @@ public class Player extends EntityLiving {
 		else if(ghostCasted==0 && ghost) {
 			ghostCasted--;
 			if(ghostUsed==false) {
-				ghostCooldown=30*10; //10Seconds
-				ghost=false;
+//				ghostCooldown=30*10; //10Seconds
+//				ghost=false;
 			}
 		}
 		
@@ -104,7 +105,7 @@ public class Player extends EntityLiving {
 		else if(shootCasted==0) {
 			shootEnergyBall(game);
 			shootCasted--;
-			shootCooldown=30*5;
+//			shootCooldown=30*5;
 		}
 		
 		//Try to disable Ghost Ability
@@ -120,7 +121,7 @@ public class Player extends EntityLiving {
 			if(collision)  
 				ghost=true;
 			else {
-				ghostCooldown = 30*15;
+//				ghostCooldown = 30*15;
 			}
 		}
 	}

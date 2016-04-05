@@ -67,7 +67,7 @@ public class GameClass extends AbstractGameClass {
 		this.setFont(new BitmapFont());
 		
 		OrthographicCamera camera = new OrthographicCamera();
-        camera.setToOrtho(false, 1000, 1000);
+        camera.setToOrtho(false, 128, 128);
         this.setCamera(camera);
         
 		try{
@@ -206,8 +206,8 @@ public class GameClass extends AbstractGameClass {
 
 	@Override
 	public void Init() {
-		setWorld(WorldLoader.loadWorld(this,Gdx.files.internal("resources/map.csv")));
-		getWorld().setPlayer(new Player(8,16));
+		setWorld(WorldLoader.loadWorldComplete(this, "world1"));
+		getWorld().setPlayer(new Player(8,8*64));
 	}
 	
 	

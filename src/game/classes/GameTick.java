@@ -184,11 +184,47 @@ public class GameTick extends Tick{
 	
 	public static boolean collisonBlock(Entity entity,PixelLocation loc,int x,int y,int id) {
 		if(id==-1) return false;
-		if(id == 2 || id == 3 || id == 4) { //Platform
+		switch(id) {
+		case 0:
+		case 1:
+		case 2:
+		case 3:
+		case 4:
+		case 5:
+		case 6:
+		case 7:
+		case 10:
+		case 11:
+		case 12:
+		case 13:
+		case 15:
+		case 16:
+		case 17:
+		case 18:
+		case 19:
+		case 20:
+		case 21:
+		case 22:
+		case 23:
+		case 24:
+		case 25:
+		case 28:
+		case 29:
+			
+			return false;
+		}
+		if(id == 19) { //Mark
+		
+		}
+		if(id == 9) { //Platform
 			if(!(entity instanceof Player))
 				return false;
 			boolean ret = entity.getY()-6>y*Config.tileSize;			
 			return ret;
+		}
+		
+		if(id == 14 || id == 30) { //Water
+			
 		}
 		
 		if(id==1) {
@@ -198,6 +234,14 @@ public class GameTick extends Tick{
 					player.setGhostUsed(true);
 					return false;
 				}
+			}
+		}
+		
+		if(entity instanceof Player) {
+			Player player = (Player)entity;
+			if(player.isGhost()) {
+				player.setGhostUsed(true);
+				return false;
 			}
 		}
 		return true;
@@ -251,6 +295,21 @@ public class GameTick extends Tick{
 			BlockLocation blockLocation;
 			for (int by = 0; by < c.getSizeY(); by++) {
 				for (int bx = 0; bx < c.getSizeX(); bx++) {
+					blockID =  c.getBlockIDBack(bx, by);
+					blockLocation = new BlockLocation(c.getChunkX() * c.getSizeX()
+							+ bx, c.getChunkY() * c.getSizeY() + by);
+					if(blockID!=1)
+						renderBlock(e,batch,blockLocation.getX(), blockLocation.getY(),blockID);
+				}
+			}
+		}
+		
+		for(int chunkIndex=0;chunkIndex<game.getWorld().getChunkArray().length;chunkIndex++) {
+			Chunk c = game.getWorld().getChunkArray()[chunkIndex];
+			int blockID = 0;
+			BlockLocation blockLocation;
+			for (int by = 0; by < c.getSizeY(); by++) {
+				for (int bx = 0; bx < c.getSizeX(); bx++) {
 					blockID =  c.getBlockID(bx, by);
 					blockLocation = new BlockLocation(c.getChunkX() * c.getSizeX()
 							+ bx, c.getChunkY() * c.getSizeY() + by);
@@ -272,6 +331,22 @@ public class GameTick extends Tick{
 		world.getPlayer().renderTick(e, -1);
 		world.getPlayer().render(e, batch);
 		world.getPlayer().renderExtra(e, batch);
+		
+		for(int chunkIndex=0;chunkIndex<game.getWorld().getChunkArray().length;chunkIndex++) {
+			Chunk c = game.getWorld().getChunkArray()[chunkIndex];
+			int blockID = 0;
+			BlockLocation blockLocation;
+			for (int by = 0; by < c.getSizeY(); by++) {
+				for (int bx = 0; bx < c.getSizeX(); bx++) {
+					blockID =  c.getBlockIDFore(bx, by);
+					blockLocation = new BlockLocation(c.getChunkX() * c.getSizeX()
+							+ bx, c.getChunkY() * c.getSizeY() + by);
+					if(blockID!=1)
+						renderBlock(e,batch,blockLocation.getX(), blockLocation.getY(),blockID);
+				}
+			}
+		}
+		
 	}
 
 	private void renderBlock(AbstractGameClass e,SpriteBatch b,int x,int y,int id) {
