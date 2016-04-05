@@ -26,12 +26,28 @@ public class Player extends EntityLiving {
 	}
 	
 	public void skillQ(GameClass g) {
-		g.getWorld().addEntity(new Projectile(this.getX()+4,this.getY()+4,this.getLastDirection()));
+		if(shootCooldown==-1)
+			shootCasted=30*2;
 	}
 	public void skillE(GameClass e) {
-		setGhost(true);
+		if(ghostCooldown==-1) {
+			setGhost(true);
+			ghostCasted=30*5; // 5 Seconds
+		}
 	}
 	
+	
+	public void shootEnergyBall(GameClass g) {
+		g.getWorld().addEntity(new Projectile(this.getX()+4,this.getY()+4,this.getLastDirection()));
+	}
+
+
+	public void skillUnQ(GameClass g) {
+		shootCasted=-1;
+	}
+	public void skillUnE(GameClass e) {
+	}
+
 	public boolean hasDirections() { return false; }
 
 	public void render(AbstractGameClass e,SpriteBatch g) {
@@ -55,10 +71,41 @@ public class Player extends EntityLiving {
 	public void setGhostUsed(boolean b) {
 		ghostUsed=b;
 	}
+	public boolean canMoveVertical() {
+		return ghost;
+	}
+	
+	int ghostCooldown=-1;
+	int ghostCasted=-1;
+	int shootCooldown=-1;
+	int shootCasted=-1;
 	
 	public void tickTraveled(AbstractGameClass e) {
 		super.tickTraveled(e);
 		GameClass game = (GameClass)e;
+		
+		if(ghostCooldown>=0)
+			ghostCooldown--;
+		if(shootCooldown>=0)
+			shootCooldown--;
+		
+		if(ghostCasted>0 && ghost)
+			ghostCasted--;
+		else if(ghostCasted==0 && ghost) {
+			ghostCasted--;
+			if(ghostUsed==false) {
+				ghostCooldown=30*10; //10Seconds
+				ghost=false;
+			}
+		}
+		
+		if(shootCasted>0)
+			shootCasted--;
+		else if(shootCasted==0) {
+			shootEnergyBall(game);
+			shootCasted--;
+			shootCooldown=30*5;
+		}
 		
 		//Try to disable Ghost Ability
 		if(ghost && ghostUsed) {
@@ -72,6 +119,9 @@ public class Player extends EntityLiving {
 				}
 			if(collision)  
 				ghost=true;
+			else {
+				ghostCooldown = 30*15;
+			}
 		}
 	}
 	

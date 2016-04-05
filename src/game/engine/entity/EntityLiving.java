@@ -39,6 +39,7 @@ public class EntityLiving extends Entity {
 		isJumping=b;
 	}
 	
+	
 	public boolean getJumping() {
 		return isJumping;
 	}
@@ -105,11 +106,32 @@ public class EntityLiving extends Entity {
 		else if(direction==2)
 			location.add(new Velocity(-1,0));
 		
-		if(isJumping)
+		if(isJumping && !canMoveVertical())
 			location.add(new Velocity(0, (int)Math.ceil((float)traveled/10)));
+		
+		
+		if(canMoveVertical() && directionVertical!=0)
+			location.add(new Velocity(0,1*directionVertical));
+			
 		return location;
 	}
-
+	public boolean canMoveVertical() {
+		return false;
+	}
+	int directionVertical=0;
+	public void up() {
+		directionVertical=1;
+	}
+	public void down() {
+		directionVertical=-1;
+	}
+	public void setDirectionVertical(int i) {
+		directionVertical=i;
+	}
+	public int getDirectionVertical() {
+		return directionVertical;
+	}
+	
 	
 	
 

@@ -37,15 +37,27 @@ public class GameTick extends Tick{
 	public boolean keyEvent(AbstractGameClass e,int type,int keycode) {
 		Player player = ((GameClass)e).getWorld().getPlayer();
 		switch(keycode) {
-		case Keys.RIGHT:
 		case Keys.D:
 			if(type==0)
 				player.queueDirection(1);
 			return true;
-		case Keys.LEFT:
 		case Keys.A:
 			if(type==0)
 				player.queueDirection(2);
+			return true;
+		case Keys.W:
+			if(type==0)
+				player.up();
+			else if(type==1)
+				if(player.getDirectionVertical()==1)
+					player.setDirectionVertical(0);
+			return true;
+		case Keys.S:
+			if(type==0)
+				player.down();
+			else if(type==1)
+				if(player.getDirectionVertical()==-1)
+					player.setDirectionVertical(0);
 			return true;
 		case Keys.SPACE:
 			if(type==0)
@@ -54,10 +66,14 @@ public class GameTick extends Tick{
 		case Keys.Q:
 			if(type==0)
 				player.skillQ(((GameClass)e));
+			else if(type==1)
+				player.skillUnQ(((GameClass)e));
 			return true;
 		case Keys.E:
 			if(type==0)
 				player.skillE(((GameClass)e));
+			else if(type==1)
+				player.skillUnE(((GameClass)e));
 			return true;
 		case Keys.NUM_1:
 			return true;
@@ -95,16 +111,21 @@ public class GameTick extends Tick{
 		game.cameraTick();
 		Player player = world.getPlayer();
 		player.tickTraveled(e);
-		if(player.getTraveled()<=0 && player.getDirection()!=0) {
-			if(!Gdx.input.isKeyPressed(Keys.A) && !Gdx.input.isKeyPressed(Keys.D) 
-					&& !Gdx.input.isKeyPressed(Keys.LEFT) && !Gdx.input.isKeyPressed(Keys.RIGHT))
+		
+		if(player.getDirection()!=0) {
+			if(!Gdx.input.isKeyPressed(Keys.A) && !Gdx.input.isKeyPressed(Keys.D))
 				player.setDirection(0);
 		}
+		if(player.getDirectionVertical()!=0) {
+			if(!Gdx.input.isKeyPressed(Keys.W) && !Gdx.input.isKeyPressed(Keys.S))
+				player.setDirectionVertical(0);
+		}
+		
 		Velocity velo = player.getVelocity();
 		if(velo==null) velo = new Velocity(0,0);
 		velo.add(player.getAddLocation(true));
 		
-		if(!player.getJumping())
+		if(!player.getJumping() && !player.isGhost())
 			velo.add(new Velocity(0,-2));
 		
 		PixelLocation newLoc = player.getLocation().addVelocity(velo);
@@ -209,7 +230,8 @@ public class GameTick extends Tick{
 	@Override
 	public void render(AbstractGameClass e, float delta) {
 		SpriteBatch batch  = e.getBatch();
-		batch.setColor(0,0,0,1);
+//		batch.setColor(0,0,0,1);
+		batch.setColor(32f/255f,33f/255f,48f/255f,1f);
 		batch.draw(e.getImageHandler().getImage("empty"),0,0,Gdx.graphics.getWidth(),Gdx.graphics.getHeight());
 		batch.setColor(1,1,1,1);
 		
