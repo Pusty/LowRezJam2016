@@ -44,6 +44,22 @@ public class Chunk {
 				return 0;
 			return idarrayBackground[y * sizex + x];
 		}
+		
+		boolean emptyWorld=true;
+		boolean emptyFore=true;
+		boolean emptyBack=true;
+		
+		public boolean isEmptyWorld() {
+			return emptyWorld;
+		}
+		
+		public boolean isEmptyFore() {
+			return emptyFore;
+		}
+		
+		public boolean isEmptyBack() {
+			return emptyBack;
+		}
 	
 
 		public int getSizeX() {
@@ -60,16 +76,22 @@ public class Chunk {
 		public void setBlockID(int x, int y,int id) {
 			if (x >= sizex || y >= sizey || x < 0 || y < 0)
 				return;
+			if(id!=-1 && emptyWorld)
+				emptyWorld=false;
 			idarray[y * sizex + x]=id;
 		}
 		public void setBlockIDFore(int x, int y,int id) {
 			if (x >= sizex || y >= sizey || x < 0 || y < 0)
 				return;
+			if(id!=-1 && emptyFore)
+				emptyFore=false;
 			idarrayForeground[y * sizex + x]=id;
 		}
 		public void setBlockIDBack(int x, int y,int id) {
 			if (x >= sizex || y >= sizey || x < 0 || y < 0)
 				return;
+			if(id!=-1 && emptyBack)
+				emptyBack=false;
 			idarrayBackground[y * sizex + x]=id;
 		}
 	

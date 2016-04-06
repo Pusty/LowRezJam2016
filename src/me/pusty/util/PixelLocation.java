@@ -58,8 +58,8 @@ public class PixelLocation {
 	public void setX(int x){this.x=x;}
 	public void setY(int y){this.y=y;}
 	public PixelLocation clone(){return new PixelLocation(x,y);}
-    public static double getDistance(PixelLocation l,PixelLocation l2){
-    	return Math.sqrt(((l2.getX()-l.getX())*(l2.getX()-l.getX()))+((l2.getY()-l.getY())*(l2.getY()-l.getY())));
+    public static int getDistance(PixelLocation l,PixelLocation l2){
+    	return (int)Math.sqrt(((l2.getX()-l.getX())*(l2.getX()-l.getX()))+((l2.getY()-l.getY())*(l2.getY()-l.getY())));
     }
     
 

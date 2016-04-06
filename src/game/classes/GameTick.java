@@ -19,9 +19,11 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 
 
+
 import me.pusty.util.AbstractGameClass;
 import me.pusty.util.BlockLocation;
 import me.pusty.util.PixelLocation;
+import me.pusty.util.RawAnimation;
 import me.pusty.util.Tick;
 import me.pusty.util.Velocity;
 
@@ -107,6 +109,8 @@ public class GameTick extends Tick{
 		World world = game.getWorld();
 		if(ticks>0)
 			ticks--;
+		if(ticks==0)
+			ticks=50;
 		
 		game.cameraTick();
 		Player player = world.getPlayer();
@@ -124,9 +128,18 @@ public class GameTick extends Tick{
 		Velocity velo = player.getVelocity();
 		if(velo==null) velo = new Velocity(0,0);
 		velo.add(player.getAddLocation(true));
+
 		
 		if(!player.getJumping() && !player.isGhost())
-			velo.add(new Velocity(0,-2));
+			if(player.getWater())
+				velo.add(new Velocity(0,-1));
+			else
+				velo.add(new Velocity(0,-2));
+		
+		if(player.getWater())
+			player.setGround(true);
+		
+		player.setWater(false);
 		
 		PixelLocation newLoc = player.getLocation().addVelocity(velo);
 			if(newLoc.x != player.getX() || newLoc.y != player.getY()) {
@@ -210,7 +223,7 @@ public class GameTick extends Tick{
 		case 25:
 		case 28:
 		case 29:
-			
+		case 14:
 			return false;
 		}
 		if(id == 19) { //Mark
@@ -223,8 +236,12 @@ public class GameTick extends Tick{
 			return ret;
 		}
 		
-		if(id == 14 || id == 30) { //Water
-			
+		if((id == 30)) { //Water
+			if(entity instanceof Player &&  entity.getY()<(y)*Config.tileSize) {
+				Player player = (Player)entity;
+				player.setWater(true);
+			}
+			return false;
 		}
 		
 		if(id==1) {
@@ -274,15 +291,12 @@ public class GameTick extends Tick{
 	@Override
 	public void render(AbstractGameClass e, float delta) {
 		SpriteBatch batch  = e.getBatch();
-//		batch.setColor(0,0,0,1);
 		batch.setColor(32f/255f,33f/255f,48f/255f,1f);
 		batch.draw(e.getImageHandler().getImage("empty"),0,0,Gdx.graphics.getWidth(),Gdx.graphics.getHeight());
 		batch.setColor(1,1,1,1);
 		
-//		batch.draw(e.getImageHandler().getImage("tile_0"),0,0);
 		GameClass game = (GameClass)e;	
 		World world = game.getWorld();
-//		int currentChunkIndex = -1;
 		
 		BlockLocation[] ghostBlocks = null;
 		if(world.getPlayer().isGhost()) {
@@ -293,6 +307,9 @@ public class GameTick extends Tick{
 			Chunk c = game.getWorld().getChunkArray()[chunkIndex];
 			int blockID = 0;
 			BlockLocation blockLocation;
+			if(c.isEmptyBack())continue;
+			if(PixelLocation.getDistance(new BlockLocation(c.getChunkX() * c.getSizeX()
+					+ 8, c.getChunkY() * c.getSizeY() + 8).toPixelLocation(),world.getPlayer().getLocation()) > 8*8*2)continue;
 			for (int by = 0; by < c.getSizeY(); by++) {
 				for (int bx = 0; bx < c.getSizeX(); bx++) {
 					blockID =  c.getBlockIDBack(bx, by);
@@ -308,6 +325,9 @@ public class GameTick extends Tick{
 			Chunk c = game.getWorld().getChunkArray()[chunkIndex];
 			int blockID = 0;
 			BlockLocation blockLocation;
+			if(c.isEmptyWorld())continue;
+			if(PixelLocation.getDistance(new BlockLocation(c.getChunkX() * c.getSizeX()
+					+ 8, c.getChunkY() * c.getSizeY() + 8).toPixelLocation(),world.getPlayer().getLocation()) > 8*8*2)continue;
 			for (int by = 0; by < c.getSizeY(); by++) {
 				for (int bx = 0; bx < c.getSizeX(); bx++) {
 					blockID =  c.getBlockID(bx, by);
@@ -336,6 +356,9 @@ public class GameTick extends Tick{
 			Chunk c = game.getWorld().getChunkArray()[chunkIndex];
 			int blockID = 0;
 			BlockLocation blockLocation;
+			if(c.isEmptyFore())continue;
+			if(PixelLocation.getDistance(new BlockLocation(c.getChunkX() * c.getSizeX()
+					+ 8, c.getChunkY() * c.getSizeY() + 8).toPixelLocation(),world.getPlayer().getLocation()) > 8*8*2)continue;
 			for (int by = 0; by < c.getSizeY(); by++) {
 				for (int bx = 0; bx < c.getSizeX(); bx++) {
 					blockID =  c.getBlockIDFore(bx, by);
@@ -353,7 +376,14 @@ public class GameTick extends Tick{
 		if(id<0) return;
 		PixelLocation cam = ((GameClass)e).getCamLocation();
 		PixelLocation move = new PixelLocation( x*Config.tileSize - cam.getX(), y*Config.tileSize - cam.getY());
-		b.draw(e.getImageHandler().getImage("tile_"+id), move.getX(), move.getY());
+		if(id==12 || id==28) { //Animated block
+			RawAnimation an = e.getAnimationHandler().getAnimation("tile_"+id);
+			int frame = ((int)Math.floor(((float)(50-ticks)/50)*an.getFrameDelays().length));
+			String textureName = an.getImage(frame);
+			
+			b.draw(e.getImageHandler().getImage(textureName), move.getX(), move.getY());
+		}else
+			b.draw(e.getImageHandler().getImage("tile_"+id), move.getX(), move.getY());
 	}
 	
 	private void renderGhostBlock(AbstractGameClass e,SpriteBatch b,int x,int y,int id,BlockLocation[] ghosts) {

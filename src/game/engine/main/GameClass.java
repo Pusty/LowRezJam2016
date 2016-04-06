@@ -2,6 +2,7 @@ package game.engine.main;
 
 import game.classes.GameTick;
 import game.classes.SpaceTick;
+import game.engine.entity.EntitySlime;
 import game.engine.entity.Player;
 import game.engine.world.World;
 import game.engine.world.WorldLoader;
@@ -67,7 +68,7 @@ public class GameClass extends AbstractGameClass {
 		this.setFont(new BitmapFont());
 		
 		OrthographicCamera camera = new OrthographicCamera();
-        camera.setToOrtho(false, 128, 128);
+        camera.setToOrtho(false, 64, 64);
         this.setCamera(camera);
         
 		try{
@@ -110,21 +111,36 @@ public class GameClass extends AbstractGameClass {
 				fileHandle = Gdx.files.internal(fileName);
 				String name = fileHandle.nameWithoutExtension();
 				Texture texture = new Texture(fileHandle);
-				if(texture.getWidth() <= Config.tileSize && texture.getHeight() <= Config.tileSize 
-							|| name.contains("bg") || name.contains("player") || name.contains("empty"))
+				if(name.contains("tile")) {
+					int splitterX = texture.getWidth()/Config.tileSize;
+					int splitterY = texture.getHeight()/Config.tileSize;
+					TextureRegion[][]  tmp = TextureRegion.split(texture, texture.getWidth()/splitterX, texture.getHeight()/splitterY);
+			        int index = 0;
+			        for (int i = 0; i < tmp.length; i++) {
+			            for (int j = 0; j < tmp[i].length; j++) {
+			            	getImageHandler().addImage(name+"_"+index, tmp[i][j]);
+			                index++;
+			            }
+			        }
+				}else
 						getImageHandler().addImage(name, new TextureRegion(texture));
-					else {
-						int splitterX = texture.getWidth()/Config.tileSize;
-						int splitterY = texture.getHeight()/Config.tileSize;
-						TextureRegion[][]  tmp = TextureRegion.split(texture, texture.getWidth()/splitterX, texture.getHeight()/splitterY);
-				        int index = 0;
-				        for (int i = 0; i < tmp.length; i++) {
-				            for (int j = 0; j < tmp[i].length; j++) {
-				            	getImageHandler().addImage(name+"_"+index, tmp[i][j]);
-				                index++;
-				            }
-				        }
-					}
+			}
+			
+			
+			{
+				fileHandle = Gdx.files.internal("resources/title.png");
+				String name = fileHandle.nameWithoutExtension();
+				Texture texture = new Texture(fileHandle);
+					int splitterX = texture.getWidth()/64;
+					TextureRegion[][]  tmp = TextureRegion.split(texture, texture.getWidth()/splitterX, texture.getHeight());
+			        int index = 0;
+			        for (int i = 0; i < tmp.length; i++) {
+			            for (int j = 0; j < tmp[i].length; j++) {
+			            	getImageHandler().addImage(name+"_"+index, tmp[i][j]);
+			                index++;
+			            }
+			        }
+			       
 			}
 			
 						
@@ -208,6 +224,7 @@ public class GameClass extends AbstractGameClass {
 	public void Init() {
 		setWorld(WorldLoader.loadWorldComplete(this, "world1"));
 		getWorld().setPlayer(new Player(8,8*64));
+		getWorld().addEntity(new EntitySlime(8,8*62));
 	}
 	
 	

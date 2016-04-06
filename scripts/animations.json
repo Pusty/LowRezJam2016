@@ -13,5 +13,35 @@
 			25,
 			25
 		]
+    },
+    {
+        "name": "tile_12",
+        "textures": [
+			"tile_12",
+			"tile_28",
+			"tile_12",
+			"tile_28"
+		],
+        "times": [
+			25,
+			25,
+			25,
+			25
+		]
+    },
+    {
+        "name": "tile_28",
+        "textures": [
+			"tile_28",
+			"tile_12",
+			"tile_28",
+			"tile_12"
+		],
+        "times": [
+			25,
+			25,
+			25,
+			25
+		]
     }
 ]

@@ -39,7 +39,8 @@ public class Player extends EntityLiving {
 	
 	
 	public void shootEnergyBall(GameClass g) {
-		g.getWorld().addEntity(new Projectile(this.getX()+4,this.getY()+4,this.getLastDirection()));
+//		g.getWorld().addEntity(new Projectile(this.getX()+4,this.getY()+4,this.getLastDirection()));
+		g.getWorld().addEntity(new Buble(this.getX()+4,this.getY()+4,this.getLastDirection()));
 	}
 
 

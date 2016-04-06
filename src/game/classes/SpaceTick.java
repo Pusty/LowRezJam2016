@@ -2,9 +2,9 @@ package game.classes;
 
 import game.engine.main.GameClass;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+
 import me.pusty.util.AbstractGameClass;
 import me.pusty.util.PixelLocation;
 import me.pusty.util.Tick;
@@ -34,9 +34,11 @@ public class SpaceTick extends Tick{
 		
 	}
 
+	int ticks = 0;
 	@Override
 	public void tick(AbstractGameClass e, float delta) {
-	
+		if(ticks>0)ticks--;
+		if(ticks==0)ticks=50;
 	}
 	
 
@@ -49,13 +51,9 @@ public class SpaceTick extends Tick{
 	@Override
 	public void render(AbstractGameClass e, float delta) {
 		SpriteBatch batch  = e.getBatch();
-		batch.setColor(0,0,0,1);
-		batch.draw(e.getImageHandler().getImage("empty"),0,0,Gdx.graphics.getWidth(),Gdx.graphics.getHeight());
-		batch.setColor(1,1,1,1);
-		
-		renderSmallText(e,batch,new PixelLocation(1,34),"Press Any Key");
-		renderSmallText(e,batch,new PixelLocation(2,28),"to Continue!");
-		
+		int index = ((int)Math.floor(((float)(50-ticks)/50)*4));
+		batch.draw(e.getImageHandler().getImage("title_"+index),0,0);
+
 		
 	}
 	

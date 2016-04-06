@@ -17,8 +17,15 @@ public class EntityLiving extends Entity {
 	boolean isJumping = false;
 	boolean onGround = true;
 	Velocity velocity = null;
+	boolean inWater = false;
 	public EntityLiving(int x, int z) {
 		super(x, z);
+	}
+	public void setWater(boolean b) {
+		inWater = b;
+	}
+	public boolean getWater() {
+		return inWater;
 	}
 	
 	public Velocity getVelocity() {
@@ -107,7 +114,10 @@ public class EntityLiving extends Entity {
 			location.add(new Velocity(-1,0));
 		
 		if(isJumping && !canMoveVertical())
-			location.add(new Velocity(0, (int)Math.ceil((float)traveled/10)));
+			if(inWater)
+				location.add(new Velocity(0, (int)Math.ceil((float)traveled/20)));
+			else
+				location.add(new Velocity(0, (int)Math.ceil((float)traveled/10)));
 		
 		
 		if(canMoveVertical() && directionVertical!=0)
