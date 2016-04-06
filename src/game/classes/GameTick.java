@@ -325,9 +325,9 @@ public class GameTick extends Tick{
 			Chunk c = game.getWorld().getChunkArray()[chunkIndex];
 			int blockID = 0;
 			BlockLocation blockLocation;
-			if(c.isEmptyWorld())continue;
-			if(PixelLocation.getDistance(new BlockLocation(c.getChunkX() * c.getSizeX()
-					+ 8, c.getChunkY() * c.getSizeY() + 8).toPixelLocation(),world.getPlayer().getLocation()) > 8*8*2)continue;
+//			if(c.isEmptyWorld())continue;
+//			if(PixelLocation.getDistance(new BlockLocation(c.getChunkX() * c.getSizeX()
+//					+ 8, c.getChunkY() * c.getSizeY() + 8).toPixelLocation(),world.getPlayer().getLocation()) > 8*8*2)continue;
 			for (int by = 0; by < c.getSizeY(); by++) {
 				for (int bx = 0; bx < c.getSizeX(); bx++) {
 					blockID =  c.getBlockID(bx, by);

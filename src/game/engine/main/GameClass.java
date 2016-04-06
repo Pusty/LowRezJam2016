@@ -223,8 +223,8 @@ public class GameClass extends AbstractGameClass {
 	@Override
 	public void Init() {
 		setWorld(WorldLoader.loadWorldComplete(this, "world1"));
-		getWorld().setPlayer(new Player(8,8*64));
-		getWorld().addEntity(new EntitySlime(8,8*62));
+		getWorld().setPlayer(new Player(8,8*126));
+		getWorld().addEntity(new EntitySlime(8,8*126));
 	}
 	
 	
