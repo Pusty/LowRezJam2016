@@ -140,11 +140,13 @@ public class GameTick extends Tick{
 			player.setGround(true);
 		
 		player.setWater(false);
-		
 		PixelLocation newLoc = player.getLocation().addVelocity(velo);
 			if(newLoc.x != player.getX() || newLoc.y != player.getY()) {
 				BlockLocation[] blocks = get2x2HitBox(newLoc);
 				boolean collision = false;
+				if(newLoc.x < 0 || newLoc.x > world.getSizeX()*Config.tileSize) collision = true;
+				if(newLoc.y < 0 || newLoc.y > world.getSizeY()*Config.tileSize) collision = true;
+				if(!collision)
 				for(int b=0;b<blocks.length;b++)
 					if(collisonBlock(player,newLoc,blocks[b].getX(),blocks[b].getY(),world.getBlockID(blocks[b].getX(),blocks[b].getY()))) {
 						collision = true;
@@ -157,6 +159,8 @@ public class GameTick extends Tick{
 					if(velo.getY() != 0f) {					
 						newLoc = player.getLocation().addVelocity(new Velocity(0f,velo.getY()));
 						BlockLocation[] blocksY = get2x2HitBox(newLoc);
+						if(newLoc.y < 0 || newLoc.y > world.getSizeY()*Config.tileSize) collision = true;
+						if(!collision)
 						for(int b=0;b<blocksY.length;b++)
 							if(collisonBlock(player,newLoc,blocksY[b].getX(),blocksY[b].getY(),world.getBlockID(blocksY[b].getX(),blocksY[b].getY()))) {
 								collision = true;
@@ -172,6 +176,8 @@ public class GameTick extends Tick{
 						newLoc = player.getLocation().addVelocity(new Velocity(velo.getX(),0f));
 						BlockLocation[] blocksX = get2x2HitBox(newLoc);
 						collision = false;
+						if(newLoc.x < 0 || newLoc.x > world.getSizeX()*Config.tileSize) collision = true;
+						if(!collision)
 						for(int b=0;b<blocksX.length;b++)
 							if(collisonBlock(player,newLoc,blocksX[b].getX(),blocksX[b].getY(),world.getBlockID(blocksX[b].getX(),blocksX[b].getY()))) {
 								collision = true;
@@ -229,10 +235,13 @@ public class GameTick extends Tick{
 		if(id == 19) { //Mark
 		
 		}
-		if(id == 9) { //Platform
+		if(id == 8) { //Platform
 			if(!(entity instanceof Player))
 				return false;
-			boolean ret = entity.getY()-6>y*Config.tileSize;			
+//			System.out.println(((Player)entity).getDirectionVertical());
+			boolean ret = entity.getY()-6>y*Config.tileSize;
+			if(((Player)entity).getDirectionVertical()==-1)
+				ret = false;
 			return ret;
 		}
 		
@@ -244,7 +253,7 @@ public class GameTick extends Tick{
 			return false;
 		}
 		
-		if(id==1) {
+		if(id==144 || id ==128) {
 			if(entity instanceof Player) {
 				Player player = (Player)entity;
 				if(player.isGhost()) {
@@ -333,7 +342,8 @@ public class GameTick extends Tick{
 					blockID =  c.getBlockID(bx, by);
 					blockLocation = new BlockLocation(c.getChunkX() * c.getSizeX()
 							+ bx, c.getChunkY() * c.getSizeY() + by);
-					if(blockID!=1 || ghostBlocks==null)
+					//144,128
+					if((blockID!=144 && blockID !=128) || ghostBlocks==null)
 						renderBlock(e,batch,blockLocation.getX(), blockLocation.getY(),blockID);
 					else
 						renderGhostBlock(e,batch,blockLocation.getX(), blockLocation.getY(),blockID,ghostBlocks);

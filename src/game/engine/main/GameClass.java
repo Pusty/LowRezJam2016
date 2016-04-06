@@ -223,8 +223,8 @@ public class GameClass extends AbstractGameClass {
 	@Override
 	public void Init() {
 		setWorld(WorldLoader.loadWorldComplete(this, "world1"));
-		getWorld().setPlayer(new Player(8,8*126));
-		getWorld().addEntity(new EntitySlime(8,8*126));
+		getWorld().setPlayer(new Player(8,8*124));
+		getWorld().addEntity(new EntitySlime(8,8*124));
 	}
 	
 	
@@ -246,8 +246,20 @@ public class GameClass extends AbstractGameClass {
 			goal = (new BlockLocation(5,5).toPixelLocation().add(new PixelLocation(-32 + 4,-32 + 4)));
 		}else if(point==2) {
 			goal =  (new BlockLocation(0,0).toPixelLocation().add(new PixelLocation(-32 + 4,-32 + 4)));
-		}else if(point==0 || point==-1)
-			goal = this.getWorld().getPlayer().getLocation().add(new PixelLocation(-26,-26));
+		}else if(point==0 || point==-1) {
+			PixelLocation location = this.getWorld().getPlayer().getLocation().clone();
+
+			if(location.x <= 32)
+				location.setX(32);
+			if(location.y <= 32)
+				location.setY(32);
+			if(location.x >= getWorld().getSizeX()*Config.tileSize-32)
+				location.setX(getWorld().getSizeX()*Config.tileSize-32);
+//			if(location.y <= getWorld().getSizeY()*Config.tileSize-32)
+//				location.setY(getWorld().getSizeY()*Config.tileSize-32);
+			
+			goal = location.add(new PixelLocation(-26,-26));
+		}
 		
 		return goal;
 	}
