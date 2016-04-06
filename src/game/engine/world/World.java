@@ -85,7 +85,7 @@ public class World {
 	public void setBlockID(int x, int y,int id) {
 		int wx = x/16;
 		int wy = y/16;
-		if(wx*sizey/16+wy>=sizex/16*sizey/16)return;
+		if(wx*sizey/16+wy >=sizex/16*sizey/16)return;
 		chunkarray[((wx*(sizey/16))+wy)].setBlockID(x-(16*wx),  y-(16*wy),id);
 	}
 	public void setBlockIDBack(int x, int y,int id) {

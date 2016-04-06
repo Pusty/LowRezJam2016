@@ -224,6 +224,7 @@ public class GameClass extends AbstractGameClass {
 	public void Init() {
 		setWorld(WorldLoader.loadWorldComplete(this, "world1"));
 		getWorld().setPlayer(new Player(8,8*124));
+//		getWorld().setPlayer(new Player(110*8,8*124));
 		getWorld().addEntity(new EntitySlime(8,8*124));
 	}
 	
@@ -253,8 +254,8 @@ public class GameClass extends AbstractGameClass {
 				location.setX(32);
 			if(location.y <= 32)
 				location.setY(32);
-			if(location.x >= getWorld().getSizeX()*Config.tileSize-32)
-				location.setX(getWorld().getSizeX()*Config.tileSize-32);
+			if(location.x >= getWorld().getSizeX()*Config.tileSize-32-8)
+				location.setX(getWorld().getSizeX()*Config.tileSize-32-2);
 //			if(location.y <= getWorld().getSizeY()*Config.tileSize-32)
 //				location.setY(getWorld().getSizeY()*Config.tileSize-32);
 			

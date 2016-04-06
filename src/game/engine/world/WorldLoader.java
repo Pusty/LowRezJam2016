@@ -23,7 +23,7 @@ public class WorldLoader {
 			if(c==',')
 				count++;
 		
-		int sizeX = count;
+		int sizeX = count+1;
 		int sizeY = lines.length;
 		
 		

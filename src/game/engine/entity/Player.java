@@ -73,8 +73,11 @@ public class Player extends EntityLiving {
 	public void setGhostUsed(boolean b) {
 		ghostUsed=b;
 	}
+	public boolean isGhostUsed() {
+		return ghostUsed;
+	}
 	public boolean canMoveVertical() {
-		return ghost;
+		return ghost&&ghostUsed;
 	}
 	
 	int ghostCooldown=-1;

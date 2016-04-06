@@ -130,7 +130,7 @@ public class GameTick extends Tick{
 		velo.add(player.getAddLocation(true));
 
 		
-		if(!player.getJumping() && !player.isGhost())
+		if(!player.getJumping() && !(player.isGhost() && player.isGhostUsed()))
 			if(player.getWater())
 				velo.add(new Velocity(0,-1));
 			else
@@ -144,8 +144,8 @@ public class GameTick extends Tick{
 			if(newLoc.x != player.getX() || newLoc.y != player.getY()) {
 				BlockLocation[] blocks = get2x2HitBox(newLoc);
 				boolean collision = false;
-				if(newLoc.x < 0 || newLoc.x > world.getSizeX()*Config.tileSize) collision = true;
-				if(newLoc.y < 0 || newLoc.y > world.getSizeY()*Config.tileSize) collision = true;
+				if(newLoc.x < 0 || newLoc.x > world.getSizeX()*Config.tileSize-Config.tileSize) collision = true;
+				if(newLoc.y < 0 || newLoc.y > world.getSizeY()*Config.tileSize-Config.tileSize) collision = true;
 				if(!collision)
 				for(int b=0;b<blocks.length;b++)
 					if(collisonBlock(player,newLoc,blocks[b].getX(),blocks[b].getY(),world.getBlockID(blocks[b].getX(),blocks[b].getY()))) {
@@ -159,7 +159,7 @@ public class GameTick extends Tick{
 					if(velo.getY() != 0f) {					
 						newLoc = player.getLocation().addVelocity(new Velocity(0f,velo.getY()));
 						BlockLocation[] blocksY = get2x2HitBox(newLoc);
-						if(newLoc.y < 0 || newLoc.y > world.getSizeY()*Config.tileSize) collision = true;
+						if(newLoc.y < 0 || newLoc.y > world.getSizeY()*Config.tileSize-Config.tileSize) collision = true;
 						if(!collision)
 						for(int b=0;b<blocksY.length;b++)
 							if(collisonBlock(player,newLoc,blocksY[b].getX(),blocksY[b].getY(),world.getBlockID(blocksY[b].getX(),blocksY[b].getY()))) {
@@ -176,7 +176,7 @@ public class GameTick extends Tick{
 						newLoc = player.getLocation().addVelocity(new Velocity(velo.getX(),0f));
 						BlockLocation[] blocksX = get2x2HitBox(newLoc);
 						collision = false;
-						if(newLoc.x < 0 || newLoc.x > world.getSizeX()*Config.tileSize) collision = true;
+						if(newLoc.x < 0 || newLoc.x > world.getSizeX()*Config.tileSize-Config.tileSize) collision = true;
 						if(!collision)
 						for(int b=0;b<blocksX.length;b++)
 							if(collisonBlock(player,newLoc,blocksX[b].getX(),blocksX[b].getY(),world.getBlockID(blocksX[b].getX(),blocksX[b].getY()))) {
@@ -262,14 +262,14 @@ public class GameTick extends Tick{
 				}
 			}
 		}
-		
+		/*
 		if(entity instanceof Player) {
 			Player player = (Player)entity;
 			if(player.isGhost()) {
 				player.setGhostUsed(true);
 				return false;
 			}
-		}
+		}*/
 		return true;
 	}
 	
@@ -361,6 +361,8 @@ public class GameTick extends Tick{
 		world.getPlayer().renderTick(e, -1);
 		world.getPlayer().render(e, batch);
 		world.getPlayer().renderExtra(e, batch);
+		
+//		System.out.println(new BlockLocation(world.getPlayer().getLocation().getX()/8,world.getPlayer().getLocation().getY()/8));
 		
 		for(int chunkIndex=0;chunkIndex<game.getWorld().getChunkArray().length;chunkIndex++) {
 			Chunk c = game.getWorld().getChunkArray()[chunkIndex];
