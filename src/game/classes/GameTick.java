@@ -114,6 +114,7 @@ public class GameTick extends Tick{
 		
 		game.cameraTick();
 		Player player = world.getPlayer();
+//		System.out.println(player.getLocation().toBlocks()[0]);
 		player.tickTraveled(e);
 		
 		if(player.getDirection()!=0) {
@@ -168,8 +169,17 @@ public class GameTick extends Tick{
 							}
 						if(!collision) 
 								player.getLocation().set(newLoc);
-						else if(velo.getY()<0)
+						else if(velo.getY()<0) {
 								player.setGround(true);
+								if(player.inBubble())
+									player.setBubble(false);
+						}
+						else if(velo.getY()>0) {
+							player.setJumping(false);
+						if(player.inBubble())
+							player.setBubble(false);
+						}
+					
 						
 					}
 					if((collision || velo.getY() == 0f) && velo.getX() != 0f) {
@@ -245,8 +255,8 @@ public class GameTick extends Tick{
 			return ret;
 		}
 		
-		if((id == 30)) { //Water
-			if(entity instanceof Player &&  entity.getY()<(y)*Config.tileSize) {
+		if((id == 30)) { //Water BUUUUUUGGGGEEEDD BUG
+			if(entity instanceof Player &&  entity.getY()<(y+1)*Config.tileSize) {
 				Player player = (Player)entity;
 				player.setWater(true);
 			}
@@ -381,6 +391,11 @@ public class GameTick extends Tick{
 				}
 			}
 		}
+		
+		for(int i=0;i<8;i++)
+			batch.draw(e.getImageHandler().getImage("hud_"+i), i*8, 0);
+//			batch.draw(e.getImageHandler().getImage("hud_"+i), i*8, 64-12);
+		
 		
 	}
 

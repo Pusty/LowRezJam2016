@@ -4,10 +4,6 @@ import game.classes.GameTick;
 import game.engine.main.GameClass;
 import me.pusty.util.AbstractGameClass;
 import me.pusty.util.BlockLocation;
-import me.pusty.util.PixelLocation;
-
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
 
 
@@ -17,8 +13,16 @@ public class Player extends EntityLiving {
 		super(x, y);
 	}
 	
-	
+	boolean inBubble = false;
+	public boolean inBubble() {
+		return inBubble;
+	}
+	public void setBubble(boolean b)  {
+		inBubble = b;
+	}
 	public String getTextureName() {
+		if(inBubble)
+			return "player_bubble";
 		return "player";
 	}
 	public String getMovingTexture() {
@@ -39,8 +43,8 @@ public class Player extends EntityLiving {
 	
 	
 	public void shootEnergyBall(GameClass g) {
-//		g.getWorld().addEntity(new Projectile(this.getX()+4,this.getY()+4,this.getLastDirection()));
-		g.getWorld().addEntity(new Buble(this.getX()+4,this.getY()+4,this.getLastDirection()));
+		g.getWorld().addEntity(new Projectile(this.getX()+4,this.getY()+4,this.getLastDirection()));
+//		g.getWorld().addEntity(new Bubble(this.getX()+4,this.getY()+4,this.getLastDirection()));
 	}
 
 
@@ -52,14 +56,6 @@ public class Player extends EntityLiving {
 
 	public boolean hasDirections() { return false; }
 
-	public void render(AbstractGameClass e,SpriteBatch g) {
-		try {
-			TextureRegion image = e.getImageHandler().getImage(getImage());
-			PixelLocation cam = ((GameClass)e).getCamLocation();
-			PixelLocation move = new PixelLocation(getX() - cam.getX(), getY() - cam.getY());
-			g.draw(image,move.getX(),move.getY());
-		} catch(Exception ex) { System.err.println(getImage()); }
-	}
 	boolean ghost=false;
 	boolean ghostUsed=false;
 	public boolean isGhost() {
@@ -111,6 +107,8 @@ public class Player extends EntityLiving {
 			shootCasted--;
 //			shootCooldown=30*5;
 		}
+	
+		
 		
 		//Try to disable Ghost Ability
 		if(ghost && ghostUsed) {

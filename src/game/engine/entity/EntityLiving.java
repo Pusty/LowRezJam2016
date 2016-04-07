@@ -8,6 +8,7 @@ import me.pusty.util.PixelLocation;
 import me.pusty.util.Velocity;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
 
 public class EntityLiving extends Entity {
@@ -90,6 +91,23 @@ public class EntityLiving extends Entity {
 //				return getMovingTexture()+"_"+((this.getDirection()-1)*4 + frame);
 		}
 		return getTextureName();
+	}
+	
+
+	public void render(AbstractGameClass e,SpriteBatch g) {
+		try {
+			TextureRegion image = e.getImageHandler().getImage(getImage());
+			PixelLocation cam = ((GameClass)e).getCamLocation();
+			PixelLocation move = new PixelLocation(getX() - cam.getX(), getY() - cam.getY());
+			if(getLastDirection()==2)
+			image.flip(true, false);
+			
+			g.draw(image,move.getX(),move.getY());
+			
+			if(getLastDirection()==2)
+			image.flip(true, false);
+			
+		} catch(Exception ex) { System.err.println(getImage()); }
 	}
 	
 	
