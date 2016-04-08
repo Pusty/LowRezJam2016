@@ -8,9 +8,9 @@ import com.badlogic.gdx.files.FileHandle;
 public class WorldLoader {
 	
 	public static World loadWorldComplete(GameClass g, String name) {
-		World world = loadWorld(g,Gdx.files.internal("resources/tm_"+name+"_World.csv"));
-		loadWorldFore(g,Gdx.files.internal("resources/tm_"+name+"_Foreground.csv"),world);
-		loadWorldBack(g,Gdx.files.internal("resources/tm_"+name+"_Background.csv"),world);
+		World world = loadWorld(g,Gdx.files.internal("resources/tilemap_"+name+"_World.csv"));
+		loadWorldFore(g,Gdx.files.internal("resources/tilemap_"+name+"_Foreground.csv"),world);
+		loadWorldBack(g,Gdx.files.internal("resources/tilemap_"+name+"_Background.csv"),world);
 		return world;
 	}
 	public static World loadWorld(GameClass g, FileHandle handle) {

@@ -242,6 +242,8 @@ public class GameTick extends Tick{
 		case 14:
 			return false;
 		}
+		
+		if(id >= 50 && id <= 57) return false;
 		if(id == 19) { //Mark
 		
 		}
@@ -255,7 +257,7 @@ public class GameTick extends Tick{
 			return ret;
 		}
 		
-		if((id == 30)) { //Water BUUUUUUGGGGEEEDD BUG
+		if((id ==62)) { //Water BUUUUUUGGGGEEEDD BUG
 			if(entity instanceof Player &&  entity.getY()<(y+1)*Config.tileSize) {
 				Player player = (Player)entity;
 				player.setWater(true);
@@ -263,7 +265,7 @@ public class GameTick extends Tick{
 			return false;
 		}
 		
-		if(id==144 || id ==128) {
+		if(id==384 || id ==432) {
 			if(entity instanceof Player) {
 				Player player = (Player)entity;
 				if(player.isGhost()) {
