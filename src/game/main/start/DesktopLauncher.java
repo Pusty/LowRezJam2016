@@ -19,10 +19,5 @@ public class DesktopLauncher {
 		GameClass gameclass = new GameClass();
 
 		new LwjglApplication(gameclass, config);
-
-		
-	
-		
-
 	}
 }
