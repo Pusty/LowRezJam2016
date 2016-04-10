@@ -25,7 +25,6 @@ import me.pusty.util.BlockLocation;
 import me.pusty.util.PixelLocation;
 import me.pusty.util.RawAnimation;
 import me.pusty.util.Tick;
-import me.pusty.util.Velocity;
 
 public class GameTick extends Tick{
 
@@ -65,33 +64,32 @@ public class GameTick extends Tick{
 			if(type==0)
 				player.jump();
 			return true;
-		case Keys.Q:
+		case Keys.LEFT:
 			if(type==0)
 				player.skillQ(((GameClass)e));
 			else if(type==1)
 				player.skillUnQ(((GameClass)e));
 			return true;
-		case Keys.E:
+		case Keys.RIGHT:
 			if(type==0)
 				player.skillE(((GameClass)e));
 			else if(type==1)
 				player.skillUnE(((GameClass)e));
 			return true;
+		case Keys.E:
+			if(type==0)
+				player.use(((GameClass)e));
+			if(type==1)
+				player.setUse(false);
+			return true;
 		case Keys.NUM_1:
+			player.getLocation().set(new BlockLocation(50,114).toPixelLocation());
 			return true;
 		case Keys.NUM_2:
-			((GameClass)e).setCameraPoint(1);
-			((GameClass)e).setLastCameraPoint(((GameClass)e).getCamPointLocation(0));
-			((GameClass)e).cameraTick=50;
-			player.setAnimation(e.getAnimationHandler().getAnimation("test_player"));
-			player.setSpeachText("TEXT");
-			return true;
-		case Keys.NUM_3:
-			((GameClass)e).setCameraPoint(2);
-			((GameClass)e).setLastCameraPoint(((GameClass)e).getCamPointLocation(0));
-			((GameClass)e).cameraTick=50;
+			player.getLocation().set(new BlockLocation(76,118).toPixelLocation());
 			return true;
 		}
+		
 		
 		return false;
 	}
@@ -112,96 +110,24 @@ public class GameTick extends Tick{
 		if(ticks==0)
 			ticks=50;
 		
-		game.cameraTick();
 		Player player = world.getPlayer();
-//		System.out.println(player.getLocation().toBlocks()[0]);
-		player.tickTraveled(e);
 		
-		if(player.getDirection()!=0) {
-			if(!Gdx.input.isKeyPressed(Keys.A) && !Gdx.input.isKeyPressed(Keys.D))
-				player.setDirection(0);
-		}
-		if(player.getDirectionVertical()!=0) {
-			if(!Gdx.input.isKeyPressed(Keys.W) && !Gdx.input.isKeyPressed(Keys.S))
-				player.setDirectionVertical(0);
+		
+		if(player.getHealth() <=0 && game.getTimeout()==-2) {
+			game.setTimeRunning(true);
+			game.getTemplate().loadWorld(game);
+			game.setTimeout(-1);
 		}
 		
-		Velocity velo = player.getVelocity();
-		if(velo==null) velo = new Velocity(0,0);
-		velo.add(player.getAddLocation(true));
+		game.cameraTick();
 
 		
-		if(!player.getJumping() && !(player.isGhost() && player.isGhostUsed()))
-			if(player.getWater())
-				velo.add(new Velocity(0,-1));
-			else
-				velo.add(new Velocity(0,-2));
-		
-		if(player.getWater())
-			player.setGround(true);
-		
-		player.setWater(false);
-		PixelLocation newLoc = player.getLocation().addVelocity(velo);
-			if(newLoc.x != player.getX() || newLoc.y != player.getY()) {
-				BlockLocation[] blocks = get2x2HitBox(newLoc);
-				boolean collision = false;
-				if(newLoc.x < 0 || newLoc.x > world.getSizeX()*Config.tileSize-Config.tileSize) collision = true;
-				if(newLoc.y < 0 || newLoc.y > world.getSizeY()*Config.tileSize-Config.tileSize) collision = true;
-				if(!collision)
-				for(int b=0;b<blocks.length;b++)
-					if(collisonBlock(player,newLoc,blocks[b].getX(),blocks[b].getY(),world.getBlockID(blocks[b].getX(),blocks[b].getY()))) {
-						collision = true;
-						break;
-					}
-				if(!collision) 
-						player.getLocation().set(newLoc);
-				else {
-					collision = false;
-					if(velo.getY() != 0f) {					
-						newLoc = player.getLocation().addVelocity(new Velocity(0f,velo.getY()));
-						BlockLocation[] blocksY = get2x2HitBox(newLoc);
-						if(newLoc.y < 0 || newLoc.y > world.getSizeY()*Config.tileSize-Config.tileSize) collision = true;
-						if(!collision)
-						for(int b=0;b<blocksY.length;b++)
-							if(collisonBlock(player,newLoc,blocksY[b].getX(),blocksY[b].getY(),world.getBlockID(blocksY[b].getX(),blocksY[b].getY()))) {
-								collision = true;
-								break;
-							}
-						if(!collision) 
-								player.getLocation().set(newLoc);
-						else if(velo.getY()<0) {
-								player.setGround(true);
-								if(player.inBubble())
-									player.setBubble(false);
-						}
-						else if(velo.getY()>0) {
-							player.setJumping(false);
-						if(player.inBubble())
-							player.setBubble(false);
-						}
-					
-						
-					}
-					if((collision || velo.getY() == 0f) && velo.getX() != 0f) {
-						newLoc = player.getLocation().addVelocity(new Velocity(velo.getX(),0f));
-						BlockLocation[] blocksX = get2x2HitBox(newLoc);
-						collision = false;
-						if(newLoc.x < 0 || newLoc.x > world.getSizeX()*Config.tileSize-Config.tileSize) collision = true;
-						if(!collision)
-						for(int b=0;b<blocksX.length;b++)
-							if(collisonBlock(player,newLoc,blocksX[b].getX(),blocksX[b].getY(),world.getBlockID(blocksX[b].getX(),blocksX[b].getY()))) {
-								collision = true;
-								break;
-							}
-						if(!collision) 
-								player.getLocation().set(newLoc);
-					}
-					
-				}
-			}
-		
-		
-			
+		if(player.getHealth()<=0 && game.getTimeout()==-1) {
+			game.setTimeRunning(false);
+			game.setTimeout(10);
+		}
+
+		player.tickTraveled(e);
 			
 			for(int entityIndex=0;entityIndex<world.getEntityArray().length;entityIndex++) {
 				Entity entity = world.getEntityArray()[entityIndex];
@@ -213,51 +139,30 @@ public class GameTick extends Tick{
 	
 	public static boolean collisonBlock(Entity entity,PixelLocation loc,int x,int y,int id) {
 		if(id==-1) return false;
-		switch(id) {
-		case 0:
-		case 1:
-		case 2:
-		case 3:
-		case 4:
-		case 5:
-		case 6:
-		case 7:
-		case 10:
-		case 11:
-		case 12:
-		case 13:
-		case 15:
-		case 16:
-		case 17:
-		case 18:
-		case 19:
-		case 20:
-		case 21:
-		case 22:
-		case 23:
-		case 24:
-		case 25:
-		case 28:
-		case 29:
-		case 14:
+		if(id==0) {
+			if(entity instanceof Player) {
+				Player player = (Player)entity;
+				player.setDirection(1337);
+			}
 			return false;
 		}
+		if(id >= 0 && id<=7)return false;
+		if(id>=10 && id<=29)return false;
 		
 		if(id >= 50 && id <= 57) return false;
 		if(id == 19) { //Mark
 		
 		}
-		if(id == 8) { //Platform
+		if(id == 8 || id == 9) { //Platform
 			if(!(entity instanceof Player))
 				return false;
-//			System.out.println(((Player)entity).getDirectionVertical());
 			boolean ret = entity.getY()-6>y*Config.tileSize;
 			if(((Player)entity).getDirectionVertical()==-1)
 				ret = false;
 			return ret;
 		}
 		
-		if((id ==62)) { //Water BUUUUUUGGGGEEEDD BUG
+		if((id ==62)) { //Water
 			if(entity instanceof Player &&  entity.getY()<(y+1)*Config.tileSize) {
 				Player player = (Player)entity;
 				player.setWater(true);
@@ -300,6 +205,27 @@ public class GameTick extends Tick{
 			}
 		return result;
 	}
+	/** a=x , b=y*/
+	public static BlockLocation[] getAxBHitBox(PixelLocation loc,int a,int b) {
+		BlockLocation[][] bl = new BlockLocation[a*b][];
+		int adding=0;
+		int indexU=0;
+		for(int aI=0;aI<a;aI++)
+			for(int bI=0;bI<a;bI++) {
+				bl[indexU] = loc.add(new PixelLocation(Config.tileSize*aI,Config.tileSize*bI)).toBlocks();
+				adding=adding+bl[indexU].length;
+				indexU++;
+			}
+		BlockLocation[] result = new BlockLocation[adding];
+		int index = 0;
+		for(int u=0;u<bl.length;u++)
+			for(int i=0;i<bl[u].length;i++) {
+				result[index] = bl[u][i];
+				index++;
+			}
+		return result;
+	}
+	
 	
 	
 
@@ -330,7 +256,7 @@ public class GameTick extends Tick{
 			BlockLocation blockLocation;
 			if(c.isEmptyBack())continue;
 			if(PixelLocation.getDistance(new BlockLocation(c.getChunkX() * c.getSizeX()
-					+ 8, c.getChunkY() * c.getSizeY() + 8).toPixelLocation(),world.getPlayer().getLocation()) > 8*8*2)continue;
+					+ 8, c.getChunkY() * c.getSizeY() + 8).toPixelLocation(),game.getCamLocation()) > 8*8*3)continue;
 			for (int by = 0; by < c.getSizeY(); by++) {
 				for (int bx = 0; bx < c.getSizeX(); bx++) {
 					blockID =  c.getBlockIDBack(bx, by);
@@ -346,9 +272,9 @@ public class GameTick extends Tick{
 			Chunk c = game.getWorld().getChunkArray()[chunkIndex];
 			int blockID = 0;
 			BlockLocation blockLocation;
-//			if(c.isEmptyWorld())continue;
-//			if(PixelLocation.getDistance(new BlockLocation(c.getChunkX() * c.getSizeX()
-//					+ 8, c.getChunkY() * c.getSizeY() + 8).toPixelLocation(),world.getPlayer().getLocation()) > 8*8*2)continue;
+			if(c.isEmptyWorld())continue;
+			if(PixelLocation.getDistance(new BlockLocation(c.getChunkX() * c.getSizeX()
+					+ 8, c.getChunkY() * c.getSizeY() + 8).toPixelLocation(),game.getCamLocation()) > 8*8*3)continue;
 			for (int by = 0; by < c.getSizeY(); by++) {
 				for (int bx = 0; bx < c.getSizeX(); bx++) {
 					blockID =  c.getBlockID(bx, by);
@@ -373,16 +299,14 @@ public class GameTick extends Tick{
 		world.getPlayer().renderTick(e, -1);
 		world.getPlayer().render(e, batch);
 		world.getPlayer().renderExtra(e, batch);
-		
-//		System.out.println(new BlockLocation(world.getPlayer().getLocation().getX()/8,world.getPlayer().getLocation().getY()/8));
-		
+			
 		for(int chunkIndex=0;chunkIndex<game.getWorld().getChunkArray().length;chunkIndex++) {
 			Chunk c = game.getWorld().getChunkArray()[chunkIndex];
 			int blockID = 0;
 			BlockLocation blockLocation;
 			if(c.isEmptyFore())continue;
 			if(PixelLocation.getDistance(new BlockLocation(c.getChunkX() * c.getSizeX()
-					+ 8, c.getChunkY() * c.getSizeY() + 8).toPixelLocation(),world.getPlayer().getLocation()) > 8*8*2)continue;
+					+ 8, c.getChunkY() * c.getSizeY() + 8).toPixelLocation(),game.getCamLocation()) > 8*8*3)continue;
 			for (int by = 0; by < c.getSizeY(); by++) {
 				for (int bx = 0; bx < c.getSizeX(); bx++) {
 					blockID =  c.getBlockIDFore(bx, by);
@@ -396,16 +320,14 @@ public class GameTick extends Tick{
 		
 		for(int i=0;i<8;i++)
 			batch.draw(e.getImageHandler().getImage("hud_"+i), i*8, 0);
-//			batch.draw(e.getImageHandler().getImage("hud_"+i), i*8, 64-12);
-		
-		
+	
 	}
 
 	private void renderBlock(AbstractGameClass e,SpriteBatch b,int x,int y,int id) {
 		if(id<0) return;
 		PixelLocation cam = ((GameClass)e).getCamLocation();
 		PixelLocation move = new PixelLocation( x*Config.tileSize - cam.getX(), y*Config.tileSize - cam.getY());
-		if(id==12 || id==28) { //Animated block
+		if(id==12 || id==60) { //Animated block
 			RawAnimation an = e.getAnimationHandler().getAnimation("tile_"+id);
 			int frame = ((int)Math.floor(((float)(50-ticks)/50)*an.getFrameDelays().length));
 			String textureName = an.getImage(frame);

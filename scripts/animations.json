@@ -1,26 +1,215 @@
 [
     {
-        "name": "test_player",
+        "name": "player_idle",
         "textures": [
-			"player",
-			"tile_0",
-			"player",
-			"tile_1"
+			"player_0",
+			"player_1",
+			"player_2",
+			"player_3"
 		],
         "times": [
-			25,
-			25,
-			25,
-			25
+			5,
+			5,
+			5,
+			5
+		]
+    },
+    {
+        "name": "player_attack",
+        "textures": [
+			"player_5",
+			"player_6",
+			"player_7"
+		],
+        "times": [
+			10,
+			10,
+			10
+		]
+    },
+    {
+        "name": "key",
+        "textures": [
+			"key_0",
+			"key_1",
+			"key_2",
+			"key_3"
+		],
+        "times": [
+			4,
+			4,
+			4,
+			4
+		]
+    },
+    {
+        "name": "door_open",
+        "textures": [
+			"door_0",
+			"door_1",
+			"door_2",
+			"door_3",
+			"door_4",
+			"door_5",
+			"door_6",
+			"door_7"
+		],
+        "times": [
+			4,
+			4,
+			4,
+			4,
+			4,
+			4,
+			4,
+			4
+		]
+    },
+    {
+        "name": "door_close",
+        "textures": [
+			"door_7",
+			"door_6",
+			"door_5",
+			"door_4",
+			"door_3",
+			"door_2",
+			"door_1",
+			"door_0"
+		],
+        "times": [
+			4,
+			4,
+			4,
+			4,
+			4,
+			4,
+			4,
+			4
+		]
+    },
+    {
+        "name": "proj_shoot",
+        "textures": [
+			"projectile_0",
+			"projectile_1",
+			"projectile_2"
+		],
+        "times": [
+			2,
+			2,
+			2
+		]
+    },
+    {
+        "name": "proj_air",
+        "textures": [
+			"projectile_3",
+			"projectile_4"
+		],
+        "times": [
+			2,
+			2
+		]
+    },
+    {
+        "name": "bridge_open",
+        "textures": [
+			"bridge_0",
+			"bridge_1",
+			"bridge_2"
+		],
+        "times": [
+			2,
+			2,
+			2
+		]
+    },
+    {
+        "name": "bridge_close",
+        "textures": [
+			"bridge_4",
+			"bridge_5",
+			"bridge_6"
+		],
+        "times": [
+			2,
+			2,
+			2
+		]
+    },
+    {
+        "name": "lever_on",
+        "textures": [
+			"lever_0",
+			"lever_1",
+			"lever_2"
+		],
+        "times": [
+			5,
+			5,
+			5
+		]
+    },
+    {
+        "name": "lever_off",
+        "textures": [
+			"lever_2",
+			"lever_1",
+			"lever_0"
+		],
+        "times": [
+			5,
+			5,
+			5
+		]
+    },
+    {
+        "name": "bubbleshooter",
+        "textures": [
+			"bubbleshooter_0",
+			"bubbleshooter_1",
+			"bubbleshooter_2",
+			"bubbleshooter_3"
+		],
+        "times": [
+			12,
+			12,
+			12,
+			12
+		]
+    },
+    {
+        "name": "slime_jump",
+        "textures": [
+			"slime_0",
+			"slime_1",
+			"slime_2"
+		],
+        "times": [
+			5,
+			5,
+			5
+		]
+    },
+    {
+        "name": "slime_idle",
+        "textures": [
+			"slime_4",
+			"slime_5"
+		],
+        "times": [
+			5,
+			5
 		]
     },
     {
         "name": "tile_12",
         "textures": [
 			"tile_12",
-			"tile_28",
+			"tile_60",
 			"tile_12",
-			"tile_28"
+			"tile_60"
 		],
         "times": [
 			25,
@@ -30,11 +219,11 @@
 		]
     },
     {
-        "name": "tile_28",
+        "name": "tile_60",
         "textures": [
-			"tile_28",
+			"tile_60",
 			"tile_12",
-			"tile_28",
+			"tile_60",
 			"tile_12"
 		],
         "times": [

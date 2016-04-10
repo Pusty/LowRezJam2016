@@ -27,7 +27,7 @@ public class World {
 		for(int cx=0;cx<sx/16;cx++)
 			for(int cz=0;cz<sy/16;cz++){
 			chunkarray[c]=new Chunk(cx,cz,16,16);c++;}
-		entityarray  = new Entity[16]; //Entity Limit
+		entityarray  = new Entity[32]; //Entity Limit
 	}
 
 	

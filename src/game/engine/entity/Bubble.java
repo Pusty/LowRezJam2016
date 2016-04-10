@@ -1,10 +1,8 @@
 package game.engine.entity;
 
-import game.classes.GameTick;
 import game.engine.main.GameClass;
 import game.engine.world.World;
 import me.pusty.util.AbstractGameClass;
-import me.pusty.util.BlockLocation;
 import me.pusty.util.PixelLocation;
 
 

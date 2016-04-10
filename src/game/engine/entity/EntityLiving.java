@@ -123,7 +123,6 @@ public class EntityLiving extends Entity {
 	}
 	
 	public Velocity getAddLocation(boolean tick) {
-		if(animation!=null) return new Velocity(0,0);
 		
 		Velocity location = new Velocity(0,0);
 		if(direction==1)
@@ -183,8 +182,6 @@ public class EntityLiving extends Entity {
 		return traveled;
 	}
 	public void tickTraveled(AbstractGameClass game) {
-		if(animation!=null) return;
-		
 		this.setSpeachText(null);
 		if(traveled > 0)
 			traveled--;
@@ -214,6 +211,16 @@ public class EntityLiving extends Entity {
 				SpaceTick.renderSmallText(e, b, move, speachText);
 			} catch(Exception ex) { System.err.println(getImage()); }
 		
+	}
+	boolean useThings = false;
+	public void use(GameClass gameClass) {
+		useThings = true;
+	}
+	public boolean getUse() {
+		return useThings;
+	}
+	public void setUse(boolean b) {
+		useThings = b;
 	}
 	
 }

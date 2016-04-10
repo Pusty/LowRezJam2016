@@ -187,7 +187,6 @@ public abstract class Tick implements Screen, InputProcessor  {
 		E().cameraTick();
 		
 		render(E(),delta);
-		
 
 	}
 	

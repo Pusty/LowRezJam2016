@@ -2,10 +2,8 @@ package game.engine.main;
 
 import game.classes.GameTick;
 import game.classes.SpaceTick;
-import game.engine.entity.BubbleSpreader;
-import game.engine.entity.Player;
 import game.engine.world.World;
-import game.engine.world.WorldLoader;
+import game.worlds.WorldTemplate;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,7 +19,6 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.utils.JsonValue;
 
 import me.pusty.util.AbstractGameClass;
-import me.pusty.util.BlockLocation;
 import me.pusty.util.PixelLocation;
 import me.pusty.util.RawAnimation;
 import me.pusty.util.json.JsonHandler;
@@ -106,7 +103,7 @@ public class GameClass extends AbstractGameClass {
 			}
 			
 			
-			String fileNames[] = {"resources/tile.png","resources/player.png","resources/empty.png","resources/bubble.png","resources/player_bubble.png"};
+			String fileNames[] = {"resources/tileset.png","resources/entities/reaper.png","resources/empty.png","resources/player_bubble.png"};
 			for(String fileName:fileNames) {			
 				fileHandle = Gdx.files.internal(fileName);
 				String name = fileHandle.nameWithoutExtension();
@@ -118,14 +115,25 @@ public class GameClass extends AbstractGameClass {
 			        int index = 0;
 			        for (int i = 0; i < tmp.length; i++) {
 			            for (int j = 0; j < tmp[i].length; j++) {
-			            	getImageHandler().addImage(name+"_"+index, tmp[i][j]);
+			            	getImageHandler().addImage("tile_"+index, tmp[i][j]);
 			                index++;
 			            }
 			        }
-				}else 	if(name.contains("tile")) {
-					int splitterX = texture.getWidth()/Config.tileSize;
-					int splitterY = texture.getHeight()/Config.tileSize;
-					TextureRegion[][]  tmp = TextureRegion.split(texture, texture.getWidth()/splitterX, texture.getHeight()/splitterY);
+				}
+				else
+						getImageHandler().addImage(name, new TextureRegion(texture));
+			}
+			
+			
+			String[] fileNames2 = {"resources/entities/bridge.png","resources/entities/door.png"
+					,"resources/entities/exclamation.png","resources/entities/goarrow.png","resources/entities/key.png"
+					,"resources/entities/lever.png","resources/entities/projectile.png","resources/entities/slime.png"};
+			for(String fileName:fileNames2) {	
+				fileHandle = Gdx.files.internal(fileName);
+				String name = fileHandle.nameWithoutExtension();
+				Texture texture = new Texture(fileHandle);
+					int splitterX = texture.getWidth()/8;
+					TextureRegion[][]  tmp = TextureRegion.split(texture, texture.getWidth()/splitterX, texture.getHeight());
 			        int index = 0;
 			        for (int i = 0; i < tmp.length; i++) {
 			            for (int j = 0; j < tmp[i].length; j++) {
@@ -133,9 +141,40 @@ public class GameClass extends AbstractGameClass {
 			                index++;
 			            }
 			        }
-				}
-				else
-						getImageHandler().addImage(name, new TextureRegion(texture));
+			       
+			}
+			
+			{
+				fileHandle = Gdx.files.internal("resources/entities/player.png");
+				String name = fileHandle.nameWithoutExtension();
+				Texture texture = new Texture(fileHandle);
+					int splitterX = texture.getWidth()/16;
+					TextureRegion[][]  tmp = TextureRegion.split(texture, texture.getWidth()/splitterX, texture.getHeight());
+			        int index = 0;
+			        for (int i = 0; i < tmp.length; i++) {
+			            for (int j = 0; j < tmp[i].length; j++) {
+			            	getImageHandler().addImage(name+"_"+index, tmp[i][j]);
+			                index++;
+			            }
+			        }
+			       
+			}
+			
+	
+			{
+				fileHandle = Gdx.files.internal("resources/entities/bubbleshooter.png");
+				String name = fileHandle.nameWithoutExtension();
+				Texture texture = new Texture(fileHandle);
+					int splitterX = texture.getWidth()/16;
+					TextureRegion[][]  tmp = TextureRegion.split(texture, texture.getWidth()/splitterX, texture.getHeight());
+			        int index = 0;
+			        for (int i = 0; i < tmp.length; i++) {
+			            for (int j = 0; j < tmp[i].length; j++) {
+			            	getImageHandler().addImage(name+"_"+index, tmp[i][j]);
+			                index++;
+			            }
+			        }
+			       
 			}
 			
 			
@@ -154,6 +193,8 @@ public class GameClass extends AbstractGameClass {
 			        }
 			       
 			}
+			
+			
 			
 			{
 				fileHandle = Gdx.files.internal("resources/hud.png");
@@ -248,13 +289,19 @@ public class GameClass extends AbstractGameClass {
 
 	}
 
+	WorldTemplate template;
+	public WorldTemplate getTemplate() {
+		return template;
+	}
+	public void setTemplate(WorldTemplate temp) {
+		template = temp;
+	}
+	
 	@Override
 	public void Init() {
-		setWorld(WorldLoader.loadWorldComplete(this, "world1"));
-		getWorld().setPlayer(new Player(8,8*124));
-//		getWorld().setPlayer(new Player(110*8,8*124));
-//		getWorld().addEntity(new EntitySlime(8,8*124));
-		getWorld().addEntity(new BubbleSpreader(8*72,8*108));
+		template = WorldTemplate.WORLD1;
+		
+		template.loadWorld(this);
 	}
 	
 	
@@ -269,13 +316,10 @@ public class GameClass extends AbstractGameClass {
 		PixelLocation current = new PixelLocation(xPos,yPos);
 		return current;
 	}
-	
 	public PixelLocation getCamPointLocation(int point) {
 		PixelLocation goal = new PixelLocation(0,0);
-		if(point==1) {
-			goal = (new BlockLocation(5,5).toPixelLocation().add(new PixelLocation(-32 + 4,-32 + 4)));
-		}else if(point==2) {
-			goal =  (new BlockLocation(0,0).toPixelLocation().add(new PixelLocation(-32 + 4,-32 + 4)));
+		if(point>0) {
+			goal = template.getCamPointLocation(this, point);
 		}else if(point==0 || point==-1) {
 			PixelLocation location = this.getWorld().getPlayer().getLocation().clone();
 
@@ -285,16 +329,31 @@ public class GameClass extends AbstractGameClass {
 				location.setY(32);
 			if(location.x >= getWorld().getSizeX()*Config.tileSize-32-8)
 				location.setX(getWorld().getSizeX()*Config.tileSize-32-8);
-//			if(location.y <= getWorld().getSizeY()*Config.tileSize-32)
-//				location.setY(getWorld().getSizeY()*Config.tileSize-32);
+			if(location.y >= getWorld().getSizeY()*Config.tileSize-32-8)
+				location.setY(getWorld().getSizeY()*Config.tileSize-32-8);
 			
 			goal = location.add(new PixelLocation(-26,-26));
 		}
 		
 		return goal;
 	}
-	
+	int timeOut = -1;
+	public void setTimeout(int t) {
+		timeOut = t;
+	}
+	public int getTimeout() {
+		return timeOut;
+	}
 	public void cameraTick() {
+		
+		if(timeOut > 0)
+			timeOut--;
+		if(timeOut==0) {
+			this.setTimeRunning(true);
+			timeOut=-2;
+		}else if(timeOut == -2)
+			timeOut = -1;
+		
 		if(getCameraPoint()==-1)return;
 		if(getCameraPoint()==0 && (cameraTick <= 0 && cameraTick > -50))
 			setTimeRunning(true);

@@ -16,6 +16,10 @@ public class PixelLocation {
 		return new PixelLocation(cx,cy);
 	}
 	
+	public BlockLocation toBlock() {
+		return new BlockLocation((int)Math.round((float)x/Config.tileSize),(int)Math.round((float)y/Config.tileSize));
+	}
+	
 	public BlockLocation[] toBlocks() {
 		BlockLocation[] result = null;
 		if(x%Config.tileSize==0 && y%Config.tileSize==0) {
