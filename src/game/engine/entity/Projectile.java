@@ -64,6 +64,7 @@ public class Projectile extends Entity{
 			if(PixelLocation.getDistance(getLocation().add(new PixelLocation(4,4)),
 					en.getLocation().add(new PixelLocation(8,8))) < 8) {
 				world.removeEntity(en);
+				game.getSound().playClip("hit",((GameClass)game).getWorld().getPlayer().getLocation(),en.getLocation());
 				timeFlying=50;
 			}
 		}

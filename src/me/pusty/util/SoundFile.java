@@ -14,19 +14,20 @@ public class SoundFile {
 		this.loop=loop;
 		sound = Gdx.audio.newSound(file);
 	}
-	Thread thread;
-	public Thread getThis(){return thread;}
-	public synchronized  void start(){
-		run();
-	}
-	public synchronized  void run() {
-			if(loop)
-				sound.loop();
-			else
-				sound.play();
+
+	public  void start(PixelLocation player,PixelLocation loc) {
+		float l = 1f;
+		if(player != null && loc != null) {
+			float distance = 8*16;
+			l = Math.max(0f,(distance-PixelLocation.getDistance(player, loc))/distance);
+		}
+		if(loop)
+			sound.loop(l);
+		else
+			sound.play(l);
 	}
 	
-	public synchronized void close() {
+	public void close() {
 		sound.stop();
 		sound.dispose();
 	}

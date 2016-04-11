@@ -60,11 +60,12 @@ public class EntityLiving extends Entity {
 		onGround=b;
 	}
 	
-	public void jump() {
+	public void jump(AbstractGameClass e) {
 		if(onGround && !isJumping) {
 			traveled = 20;
 			isJumping=true;
 			onGround=false;
+			e.getSound().playClip("jump",((GameClass)e).getWorld().getPlayer().getLocation(),getLocation());
 		}
 	}
 	

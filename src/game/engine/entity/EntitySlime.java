@@ -46,7 +46,7 @@ public class EntitySlime extends EntityLiving {
 				setDirection(1);
 			else 
 				setDirection(2);
-			jump();
+			jump(game);
 			setAnimation(game.getAnimationHandler().getAnimation("slime_jump"));
 			dir=!dir;
 		}
@@ -109,12 +109,13 @@ public class EntitySlime extends EntityLiving {
 		
 
 	}
-	
-	public void jump() {
+	@Override
+	public void jump(AbstractGameClass e) {
 		if(onGround && !isJumping) {
 			traveled = 10;
 			isJumping=true;
 			onGround=false;
+			e.getSound().playClip("jump",((GameClass)e).getWorld().getPlayer().getLocation(),getLocation());
 		}
 	}
 	

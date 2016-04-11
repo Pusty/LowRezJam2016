@@ -9,9 +9,10 @@ import me.pusty.util.PixelLocation;
 
 
 public class Door extends Entity{
-	
-	public Door(int x, int y) {
+	int index=0;
+	public Door(int x, int y,int ind) {
 		super(x, y);
+		index=ind;
 	}
 	
 	public String getTextureName() {
@@ -27,9 +28,16 @@ public class Door extends Entity{
 	boolean changed=true;
 	public void tickTraveled(AbstractGameClass abs) {
 		GameClass game = ((GameClass)abs); 
-		if(changed==false && open == false &&  WorldTemplate.KEY==true &&
+		
+		if(index==0)
+			if(changed==false && open == false &&  WorldTemplate.KEY==true &&
 				PixelLocation.getDistance(getLocation().add(new PixelLocation(4,4)),game.getWorld().getPlayer().getLocation().add(new PixelLocation(8,8))) < 16)
-			changed=true;
+				changed=true;
+		
+		if(index==1)
+			if(changed==false && open == false &&  WorldTemplate.COMBINDED==101)
+				changed=true;
+		
 		if(changed==true) {
 			open=!open;
 			changed=false;

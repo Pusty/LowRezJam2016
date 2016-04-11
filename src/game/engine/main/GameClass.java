@@ -240,15 +240,14 @@ public class GameClass extends AbstractGameClass {
 
 		
 		
-		String fileNames[] = {};
+		String fileNames[] = {"resources/sounds/start.wav","resources/sounds/jump.wav","resources/sounds/powerup.wav","resources/sounds/hit.wav"};
 		for(String fileName:fileNames) {			
 			FileHandle fileHandle = Gdx.files.internal(fileName);
 			getSound().addSound(fileHandle.nameWithoutExtension(),fileHandle,false);
 		}
 //		getSound().addSound("select", StartClass.getURL("resources/select.wav"),false);
 //		getSound().addSound("bg_1",  StartClass.getURL("resources/bg_1.wav"),true);
-		
-//		this.getSound().playClip("select");
+
 	
 		
 	}
@@ -320,6 +319,7 @@ public class GameClass extends AbstractGameClass {
 		PixelLocation goal = new PixelLocation(0,0);
 		if(point>0) {
 			goal = template.getCamPointLocation(this, point);
+			
 		}else if(point==0 || point==-1) {
 			PixelLocation location = this.getWorld().getPlayer().getLocation().clone();
 
@@ -359,6 +359,9 @@ public class GameClass extends AbstractGameClass {
 			setTimeRunning(true);
 		else
 			setTimeRunning(false);
+		
+		if(cameraTick==0)
+			getSound().playClip("powerup",null,null);
 		
 		if(cameraTick == 0) {
 			//Event Here

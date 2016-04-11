@@ -32,10 +32,10 @@ public class SoundLoader {
 		return list.get(name);
 	}
 	
-	public synchronized  void playClip(String name){
+	public synchronized  void playClip(String name,PixelLocation player,PixelLocation pos){
 	     if(list.get(name) != null){
 	    	 if(!muted)
-	    		 list.get(name).start();
+	    		 list.get(name).start(player,pos);
 	   
 	     }
 	}

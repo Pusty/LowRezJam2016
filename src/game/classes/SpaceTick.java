@@ -20,6 +20,7 @@ public class SpaceTick extends Tick{
 	@Override
 	public boolean keyEvent(AbstractGameClass e,int type,int keycode) {
 			if(type==0) {
+				e.getSound().playClip("start",null,null);
 				((GameClass)e).startGame();
 				return true;
 			}

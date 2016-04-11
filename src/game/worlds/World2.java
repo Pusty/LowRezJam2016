@@ -40,11 +40,11 @@ public class World2 extends WorldTemplate{
 		game.getWorld().setPlayer(new Player(8*4,8*121));
 		game.getWorld().addEntity(new Key(8*30,8*112));
 		game.getWorld().addEntity(new Mark(15*8,8*112,1));
-		game.getWorld().addEntity(new Door(19*8,8*100));
+		game.getWorld().addEntity(new Door(19*8,8*100,0));
 		game.getWorld().addEntity(new Lever(51*8,8*114,2));
 		game.getWorld().addEntity(new Lever(55*8,8*114,3));
 		game.getWorld().addEntity(new Lever(59*8,8*114,4));
-		game.getWorld().addEntity(new Mark(62*8,8*117,2));
+		game.getWorld().addEntity(new Door(62*8,8*116,1));
 		for(int i=0;i<21;i++)
 		game.getWorld().addEntity(new Bridge((77+i)*8,8*117,true));
 		game.getWorld().addEntity(new Lever(76*8,8*118,5));

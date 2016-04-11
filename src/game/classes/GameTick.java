@@ -62,7 +62,7 @@ public class GameTick extends Tick{
 			return true;
 		case Keys.SPACE:
 			if(type==0)
-				player.jump();
+				player.jump(e);
 			return true;
 		case Keys.LEFT:
 			if(type==0)
@@ -125,6 +125,7 @@ public class GameTick extends Tick{
 		if(player.getHealth()<=0 && game.getTimeout()==-1) {
 			game.setTimeRunning(false);
 			game.setTimeout(10);
+			game.getSound().playClip("hit",null,null);
 		}
 
 		player.tickTraveled(e);
@@ -249,6 +250,8 @@ public class GameTick extends Tick{
 		if(world.getPlayer().isGhost()) {
 			ghostBlocks = GameTick.get2x2HitBox(world.getPlayer().getLocation());
 		}
+		
+//		System.out.println(game.getWorld().getPlayer().getLocation().toBlock());
 		
 		for(int chunkIndex=0;chunkIndex<game.getWorld().getChunkArray().length;chunkIndex++) {
 			Chunk c = game.getWorld().getChunkArray()[chunkIndex];
