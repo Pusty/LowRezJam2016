@@ -41,12 +41,15 @@ public class Bubble extends Entity{
 		
 		if(!world.getPlayer().inBubble() && PixelLocation.getDistance(getLocation().add(new PixelLocation(4,4)),world.getPlayer().getLocation().add(new PixelLocation(8,8))) < 8) {
 			world.getPlayer().setBubble(true);
+			game.getSound().playClip("bubble",((GameClass)game).getWorld().getPlayer().getLocation(),getLocation());
 			timeFlying=100;
 		}
 		this.getLocation().set(newLoc);
 		timeFlying++;
-		if(timeFlying>100)
+		if(timeFlying>100) {
 			((GameClass)game).getWorld().removeEntity(this);
+			game.getSound().playClip("down",((GameClass)game).getWorld().getPlayer().getLocation(),getLocation());
+		}
 	}
 	
 }

@@ -240,7 +240,8 @@ public class GameClass extends AbstractGameClass {
 
 		
 		
-		String fileNames[] = {"resources/sounds/start.wav","resources/sounds/jump.wav","resources/sounds/powerup.wav","resources/sounds/hit.wav"};
+		String fileNames[] = {"resources/sounds/start.wav","resources/sounds/jump.wav","resources/sounds/powerup.wav","resources/sounds/hit.wav",
+				"resources/sounds/charge.wav","resources/sounds/down.wav","resources/sounds/ghost.wav","resources/sounds/jump_player.wav","resources/sounds/shot.wav"};
 		for(String fileName:fileNames) {			
 			FileHandle fileHandle = Gdx.files.internal(fileName);
 			getSound().addSound(fileHandle.nameWithoutExtension(),fileHandle,false);

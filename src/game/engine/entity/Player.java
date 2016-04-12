@@ -41,17 +41,31 @@ public class Player extends EntityLiving {
 		if(shootCooldown==-1) {
 			shootCasted=30*1;
 			setAnimation(g.getAnimationHandler().getAnimation("player_attack"));
+			g.getSound().playClip("charge", null, null);
 		}
 	}
 	public void skillE(GameClass e) {
 		if(ghostCooldown==-1) {
 			setGhost(true);
+			e.getSound().playClip("ghost", null, null);
 			ghostCasted=30*5; // 5 Seconds
+		}
+	}
+	@Override
+	public void jump(AbstractGameClass e) {
+		if(onGround && !isJumping) {
+			traveled = 20;
+			isJumping=true;
+			onGround=false;
+			e.getSound().playClip("jump_player",((GameClass)e).getWorld().getPlayer().getLocation(),getLocation());
 		}
 	}
 	
 	
+	
+	
 	public void shootEnergyBall(GameClass g) {
+		g.getSound().playClip("shot", null, null);
 		g.getWorld().addEntity(new Projectile(this.getX()+4,this.getY()+4,this.getLastDirection()));
 //		g.getWorld().addEntity(new Bubble(this.getX()+4,this.getY()+4,this.getLastDirection()));
 	}
@@ -102,6 +116,13 @@ public class Player extends EntityLiving {
 	int ghostCasted=-1;
 	int shootCooldown=-1;
 	int shootCasted=-1;
+	
+	public void down(GameClass g) {
+		if(directionVertical != -1) {
+			directionVertical=-1;
+			g.getSound().playClip("down", null, null);
+		}
+	}
 	
 	public void tickTraveled(AbstractGameClass e) {
 		

@@ -45,6 +45,7 @@ public class Lever extends Entity{
 					else if(leverIndex==5) 
 						WorldTemplate.BRIDGE=true;
 					setAnimation(abs.getAnimationHandler().getAnimation("lever_on"));
+					game.getSound().playClip("down",((GameClass)game).getWorld().getPlayer().getLocation(),getLocation());
 				}else{
 					if(leverIndex==1) 
 						WorldTemplate.BUBLE_BLASTER=false;
@@ -57,6 +58,7 @@ public class Lever extends Entity{
 					else if(leverIndex==5) 
 						WorldTemplate.BRIDGE=false;
 					setAnimation(abs.getAnimationHandler().getAnimation("lever_off"));
+					game.getSound().playClip("down",((GameClass)game).getWorld().getPlayer().getLocation(),getLocation());
 				}
 			}
 		}

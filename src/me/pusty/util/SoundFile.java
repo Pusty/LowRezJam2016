@@ -21,6 +21,7 @@ public class SoundFile {
 			float distance = 8*16;
 			l = Math.max(0f,(distance-PixelLocation.getDistance(player, loc))/distance);
 		}
+		l = l * 0.75f;
 		if(loop)
 			sound.loop(l);
 		else

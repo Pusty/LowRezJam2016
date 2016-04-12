@@ -8,6 +8,10 @@ JUN
 -Finish level 4 and 5 
 //add more here if I need to do something
 
+Pusty
+- Implement behavior of the skeleton version
+- [DONE]More work on sounds
+
 
 
 11.04
@@ -23,6 +27,6 @@ JUN
 Pusty
 -[DONE]Sounds
 -AI stuff
--Turn the reaper and the slime around as they face the wrong way
--Lvl 2 second door
+-[DONE]Turn the reaper and the slime around as they face the wrong way
+-[DONE]Lvl 2 second door
 

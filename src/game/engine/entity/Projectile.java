@@ -50,8 +50,10 @@ public class Projectile extends Entity{
 		BlockLocation[] blocks = newLoc.toBlocks();
 		World world = ((GameClass)game).getWorld();
 		for(int b=0;b<blocks.length;b++)
-			if(GameTick.collisonBlock(this, newLoc, blocks[b].getX(), blocks[b].getY(), world.getBlockID(blocks[b].getX(), blocks[b].getY())))
+			if(GameTick.collisonBlock(this, newLoc, blocks[b].getX(), blocks[b].getY(), world.getBlockID(blocks[b].getX(), blocks[b].getY()))) {
+				game.getSound().playClip("down",((GameClass)game).getWorld().getPlayer().getLocation(),getLocation());
 				timeFlying=50;
+			}
 		this.getLocation().set(newLoc);
 		timeFlying++;
 		if(timeFlying>50)

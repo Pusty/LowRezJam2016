@@ -147,10 +147,10 @@ public class EntityLiving extends Entity {
 		return false;
 	}
 	int directionVertical=0;
-	public void up() {
+	public void up(GameClass g) {
 		directionVertical=1;
 	}
-	public void down() {
+	public void down(GameClass g) {
 		directionVertical=-1;
 	}
 	public void setDirectionVertical(int i) {

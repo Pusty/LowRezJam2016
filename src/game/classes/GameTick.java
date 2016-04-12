@@ -48,14 +48,14 @@ public class GameTick extends Tick{
 			return true;
 		case Keys.W:
 			if(type==0)
-				player.up();
+				player.up(((GameClass)e));
 			else if(type==1)
 				if(player.getDirectionVertical()==1)
 					player.setDirectionVertical(0);
 			return true;
 		case Keys.S:
 			if(type==0)
-				player.down();
+				player.down(((GameClass)e));
 			else if(type==1)
 				if(player.getDirectionVertical()==-1)
 					player.setDirectionVertical(0);

@@ -28,8 +28,11 @@ public class BubbleSpreader extends Entity{
 		if(timeFlying>0)timeFlying--;
 		if(timeFlying==0) {
 			timeFlying=50;
+			
 			game.getWorld().addEntity(new Bubble(l.getX()-4,l.getY(),2));
+			game.getSound().playClip("shot",((GameClass)game).getWorld().getPlayer().getLocation(),getLocation());
 		}
+		
 	}
 	
 }

@@ -1,5 +1,8 @@
 package game.engine.entity;
 
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
+
 import game.classes.GameTick;
 import game.engine.main.GameClass;
 import game.engine.world.World;
@@ -133,6 +136,23 @@ public class EntitySlime extends EntityLiving {
 		
 	
 		return location;
+	}
+	
+	
+	public void render(AbstractGameClass e,SpriteBatch g) {
+		try {
+			TextureRegion image = e.getImageHandler().getImage(getImage());
+			PixelLocation cam = ((GameClass)e).getCamLocation();
+			PixelLocation move = new PixelLocation(getX() - cam.getX(), getY() - cam.getY());
+			if(getLastDirection()==1)
+			image.flip(true, false);
+			
+			g.draw(image,move.getX(),move.getY());
+			
+			if(getLastDirection()==1)
+			image.flip(true, false);
+			
+		} catch(Exception ex) { System.err.println(getImage()); }
 	}
 	
 
