@@ -1,17 +1,28 @@
 TODO:
 
 
+12.04
+-------
+JUN
+-Finish boss animations
+-Finish level 4 and 5 
+//add more here if I need to do something
+
+
 
 11.04
+-------
+
+JUN
+-[DONE]LvL 2 first door. player could get stuck
+-[DONE]Hud stuff
+-[DONE]Death animation 
+-[DONE]death screen
 
 
-LvL 2 first door. player could get stuck
-lvl 2 second door. I have to add it lol
+Pusty
+-[DONE]Sounds
+-AI stuff
+-Turn the reaper and the slime around as they face the wrong way
+-Lvl 2 second door
 
-sounds. Gonna do that
-
-turn the reaper and the slime around as they face the wrong way lol.
-death animation and death screen
-hud stuff.
-
-boss ai and stuff. gonna do that
