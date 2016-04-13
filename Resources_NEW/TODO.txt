@@ -9,7 +9,7 @@ JUN
 //add more here if I need to do something
 
 Pusty
-- Implement behavior of the skeleton version
+- [PARTS OF INTERFACE DONE]Implement behavior of the skeleton version
 - [DONE]More work on sounds
 
 
@@ -26,7 +26,7 @@ JUN
 
 Pusty
 -[DONE]Sounds
--AI stuff
+-[DONE]AI stuff
 -[DONE]Turn the reaper and the slime around as they face the wrong way
 -[DONE]Lvl 2 second door
 

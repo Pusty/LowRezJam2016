@@ -16,9 +16,21 @@ import me.pusty.util.Velocity;
 
 public class Player extends EntityLiving {
 
+	public static int GHOST=0,SKELETON=1,FLESH=2,HUMAN=3;
+	
+	int currentType = Player.GHOST;
+	
 	public Player(int x, int y) {
 		super(x, y);
 		setHealth(1);
+	}
+	
+	public int getCurrentType() {
+		return currentType;
+	}
+	
+	public void setCurrentType(int c) {
+		currentType = c;
 	}
 	
 	boolean inBubble = false;
@@ -38,17 +50,21 @@ public class Player extends EntityLiving {
 	}
 	
 	public void skillQ(GameClass g) {
-		if(shootCooldown==-1) {
+		if(getCurrentType() == Player.GHOST) {
+			if(shootCooldown==-1) {
 			shootCasted=30*1;
 			setAnimation(g.getAnimationHandler().getAnimation("player_attack"));
 			g.getSound().playClip("charge", null, null);
+			}
 		}
 	}
 	public void skillE(GameClass e) {
-		if(ghostCooldown==-1) {
-			setGhost(true);
-			e.getSound().playClip("ghost", null, null);
-			ghostCasted=30*5; // 5 Seconds
+		if(getCurrentType() == Player.GHOST) {
+			if(ghostCooldown==-1) {
+				setGhost(true);
+				e.getSound().playClip("ghost", null, null);
+				ghostCasted=30*5; // 5 Seconds
+			}
 		}
 	}
 	@Override
@@ -67,15 +83,19 @@ public class Player extends EntityLiving {
 	public void shootEnergyBall(GameClass g) {
 		g.getSound().playClip("shot", null, null);
 		g.getWorld().addEntity(new Projectile(this.getX()+4,this.getY()+4,this.getLastDirection()));
-//		g.getWorld().addEntity(new Bubble(this.getX()+4,this.getY()+4,this.getLastDirection()));
 	}
 
 
 	public void skillUnQ(GameClass g) {
-		shootCasted=-1;
-		setAnimation(null);
+		if(getCurrentType() == Player.GHOST) {
+			shootCasted=-1;
+			setAnimation(null);
+		}
 	}
 	public void skillUnE(GameClass e) {
+		if(getCurrentType() == Player.GHOST) {
+			
+		}
 	}
 
 	public boolean hasDirections() { return false; }

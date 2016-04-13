@@ -47,9 +47,11 @@ public class Bridge extends Entity{
 			if(open) {
 				game.getWorld().setBlockID(l.x,l.y,10);
 				setAnimation(abs.getAnimationHandler().getAnimation("bridge_open"));
+				game.getSound().playClip("down",((GameClass)game).getWorld().getPlayer().getLocation(),getLocation());
 			}else{
 				game.getWorld().setBlockID(l.x,l.y,9);
 				setAnimation(abs.getAnimationHandler().getAnimation("bridge_close"));
+				game.getSound().playClip("down",((GameClass)game).getWorld().getPlayer().getLocation(),getLocation());
 			}
 		}
 	}

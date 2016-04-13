@@ -13,6 +13,8 @@ import me.pusty.util.Velocity;
 
 public class Reaper extends EntityLiving {
 
+	int health = 1;
+	
 	public Reaper(int x, int z) {
 		super(x, z);
 		this.setDirection(0);
@@ -29,6 +31,13 @@ public class Reaper extends EntityLiving {
 
 	public boolean hasDirections() { return false; }
 	
+	private void sprayAttack(GameClass g,World w) {
+		PixelLocation loc = w.getPlayer().getLocation().clone();
+		w.addEntity(new ProjectileReaper(getX() + 20, getY() + 18, this.getLastDirection(),loc));
+		w.addEntity(new ProjectileReaper(getX() + 20, getY() + 20, this.getLastDirection(),loc));
+		w.addEntity(new ProjectileReaper(getX() + 20, getY() + 22, this.getLastDirection(),loc));
+	}
+	
 	boolean dir=false;
 	int tickRunning=0;
 	boolean moving=false;
@@ -37,8 +46,27 @@ public class Reaper extends EntityLiving {
 		
 		World world = ((GameClass)game).getWorld();
 		
-//		if(tickRunning>0)
-//			tickRunning--;
+		if(tickRunning>0)
+			tickRunning--;
+		
+		if(this.health<=0) {
+			world.removeEntity(this);
+			game.getSound().playClip("powerup", world.getPlayer().getLocation(), this.getLocation());
+			world.getPlayer().setDirection(1337);
+		}
+		for(int e=0;e<world.getEntityArray().length;e++) {
+			Entity en = world.getEntityArray()[e];
+			if(en==null)continue;
+			if(!(en instanceof Projectile))continue;
+			if(PixelLocation.getDistance(getLocation().add(new PixelLocation(20,20)),
+					en.getLocation().add(new PixelLocation(4,4))) < 14) {
+				Projectile proj = (Projectile)en;
+				world.removeEntity(proj);
+				game.getSound().playClip("hit",world.getPlayer().getLocation(),en.getLocation());
+				proj.timeFlying=50;
+				health--;
+			}
+		}
 		
 		dir=world.getPlayer().getX()<this.getX();
 		if(Math.abs((world.getPlayer().getX()+8)-(this.getX()+20)) > 32){
@@ -46,9 +74,13 @@ public class Reaper extends EntityLiving {
 				setDirection(1);
 			else 
 				setDirection(2);
-//			tickRunning=50;
 		}else
 			setDirection(0);
+		
+		if(tickRunning==0) {
+			sprayAttack(((GameClass)game),world);
+			tickRunning=50;
+		}
 		
 		Velocity velo = getVelocity();
 		if(velo==null) velo = new Velocity(0,0);

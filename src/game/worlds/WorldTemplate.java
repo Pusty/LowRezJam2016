@@ -5,7 +5,7 @@ import me.pusty.util.PixelLocation;
 
 public abstract class WorldTemplate {
 	
-	public static final WorldTemplate WORLD1 = new World1();
+	public static final WorldTemplate WORLD1 = new World2();
 	public static final WorldTemplate WORLD2 = new World2();
 	public static final WorldTemplate WORLD3 = new World3();
 	

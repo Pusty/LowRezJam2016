@@ -47,11 +47,13 @@ public class Door extends Entity{
 				game.getWorld().setBlockID(l.x,l.y+1,10);
 				game.getWorld().setBlockID(l.x,l.y+2,10);
 				setAnimation(abs.getAnimationHandler().getAnimation("door_open"));
+				game.getSound().playClip("shot",((GameClass)game).getWorld().getPlayer().getLocation(),getLocation());
 			}else{
 				game.getWorld().setBlockID(l.x,l.y,100);
 				game.getWorld().setBlockID(l.x,l.y+1,100);
 				game.getWorld().setBlockID(l.x,l.y+2,100);
 				setAnimation(abs.getAnimationHandler().getAnimation("door_close"));
+				game.getSound().playClip("shot",((GameClass)game).getWorld().getPlayer().getLocation(),getLocation());
 			}
 		}
 	}

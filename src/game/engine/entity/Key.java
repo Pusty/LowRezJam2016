@@ -31,6 +31,7 @@ public class Key extends Entity{
 		if(near==1) {
 			WorldTemplate.KEY = true;
 			game.getWorld().removeEntity(this);
+			game.getSound().playClip("powerup",((GameClass)game).getWorld().getPlayer().getLocation(),getLocation());
 			near = 2;
 			
 		}
