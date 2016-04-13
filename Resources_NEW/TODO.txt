@@ -1,5 +1,10 @@
 TODO:
 
+13.04
+-------
+
+JUN
+- Add some animation for punching and for some kind of wave
 
 12.04
 -------
