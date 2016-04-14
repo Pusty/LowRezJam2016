@@ -82,12 +82,6 @@ public class GameTick extends Tick{
 			if(type==1)
 				player.setUse(false);
 			return true;
-		case Keys.NUM_1:
-			player.getLocation().set(new BlockLocation(50,114).toPixelLocation());
-			return true;
-		case Keys.NUM_2:
-			player.getLocation().set(new BlockLocation(76,118).toPixelLocation());
-			return true;
 		}
 		
 		
@@ -321,8 +315,8 @@ public class GameTick extends Tick{
 			}
 		}
 		
-		for(int i=0;i<8;i++)
-			batch.draw(e.getImageHandler().getImage("hud_"+i), i*8, 0);
+//		for(int i=0;i<8;i++)
+//			batch.draw(e.getImageHandler().getImage("hud_"+i), i*8, 0);
 	
 	}
 

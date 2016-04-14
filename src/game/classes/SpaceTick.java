@@ -52,8 +52,9 @@ public class SpaceTick extends Tick{
 	@Override
 	public void render(AbstractGameClass e, float delta) {
 		SpriteBatch batch  = e.getBatch();
-		int index = ((int)Math.floor(((float)(50-ticks)/50)*4));
+		int index = Math.min(3, ((int)Math.floor(((float)(50-ticks)/50)*4)));
 		batch.draw(e.getImageHandler().getImage("title_"+index),0,0);
+		
 
 		
 	}

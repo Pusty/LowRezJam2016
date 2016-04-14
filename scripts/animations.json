@@ -232,5 +232,20 @@
 			25,
 			25
 		]
+    },
+    {
+        "name": "reaper_death",
+        "textures": [
+			"reaper",
+			"tile_12",
+			"tile_60",
+			"tile_12"
+		],
+        "times": [
+			25,
+			50,
+			50,
+			50
+		]
     }
 ]

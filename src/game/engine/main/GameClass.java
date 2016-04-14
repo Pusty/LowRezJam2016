@@ -405,7 +405,6 @@ public class GameClass extends AbstractGameClass {
 
 	@Override
 	public void initStartScreen() {
-//		this.setScreen(TickClassHandler.handler.getTick(this, 0));
 		SpaceTick screenTick = new SpaceTick(this);
 		this.setScreen(screenTick);
 	    Gdx.input.setInputProcessor(screenTick);

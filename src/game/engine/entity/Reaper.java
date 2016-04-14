@@ -14,7 +14,7 @@ import me.pusty.util.Velocity;
 public class Reaper extends EntityLiving {
 
 	int health = 1;
-	
+
 	public Reaper(int x, int z) {
 		super(x, z);
 		this.setDirection(0);
@@ -38,25 +38,48 @@ public class Reaper extends EntityLiving {
 		w.addEntity(new ProjectileReaper(getX() + 20, getY() + 22, this.getLastDirection(),loc));
 	}
 	
+	boolean shown=false;
+	
 	boolean dir=false;
 	int tickRunning=0;
 	boolean moving=false;
-	public void tickTraveled(AbstractGameClass game) {
+	public void tickTraveled(AbstractGameClass a) {
+		GameClass game = ((GameClass)a);
 		super.tickTraveled(game);
-		
-		World world = ((GameClass)game).getWorld();
+	
+		World world = game.getWorld();
 		
 		if(tickRunning>0)
 			tickRunning--;
 		
-		if(this.health<=0) {
+		if(health<=0 && shown) {
 			world.removeEntity(this);
-			game.getSound().playClip("powerup", world.getPlayer().getLocation(), this.getLocation());
-			world.getPlayer().setDirection(1337);
+			game.getSound().playClip("ghost", world.getPlayer().getLocation(), this.getLocation());
+			game.initStartScreen();
 		}
+		
+		if(this.health<=0 &&! shown) {
+			this.setAnimation(a.getAnimationHandler().getAnimation("reaper_death"));
+			
+			BlockLocation l1 = this.getLocation().toBlock();
+			game.getWorld().setBlockID(l1.getX()+3, l1.getY()+3, 12);
+			game.getWorld().setBlockID(l1.getX()+2, l1.getY()+1, 60);
+			game.getWorld().setBlockID(l1.getX()+1, l1.getY()+4, 60);
+			game.getWorld().setBlockID(l1.getX()+5, l1.getY()+2, 12);
+			game.setCameraPoint(1);
+			game.setLastCameraPoint(game.getCamPointLocation(0));
+			game.cameraTick=50;
+			shown=true;
+		}
+
+		
 		for(int e=0;e<world.getEntityArray().length;e++) {
 			Entity en = world.getEntityArray()[e];
 			if(en==null)continue;
+			if(this.health<=0) {
+				if(en instanceof Projectile || en instanceof ProjectileReaper)
+					world.removeEntity(en);
+			}
 			if(!(en instanceof Projectile))continue;
 			if(PixelLocation.getDistance(getLocation().add(new PixelLocation(20,20)),
 					en.getLocation().add(new PixelLocation(4,4))) < 14) {
