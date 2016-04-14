@@ -13,7 +13,7 @@ import me.pusty.util.Velocity;
 
 public class Reaper extends EntityLiving {
 
-	int health = 1;
+	int health = 5;
 
 	public Reaper(int x, int z) {
 		super(x, z);
